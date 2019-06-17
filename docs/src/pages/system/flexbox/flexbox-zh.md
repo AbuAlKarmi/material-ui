@@ -2,7 +2,7 @@
 
 <p class="description">使用一整套响应式Flexbox实用程序，快速管理网格列，导航，组件等的布局，对齐和大小调整。</p>
 
-文档页面的灵感来自[ Flexbox完整指南](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) 。 我们强烈建议您阅读并记住它。
+如果你**对 flexbox 不熟悉**，我们建议你阅读：[CSS-Tricks flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) 手册。
 
 ## 父母的属性
 
@@ -36,8 +36,8 @@
 
 ```jsx
 <Box justifyContent="flex-start">…
-<Box justifyContent="center">…
 <Box justifyContent="flex-end">…
+<Box justifyContent="center">…
 ```
 
 {{"demo": "pages/system/flexbox/JustifyContent.js"}}
@@ -109,15 +109,15 @@
 import { flexbox } from '@material-ui/system';
 ```
 
-| 导入名称             | Prop             | CSS 属性            | 主题键  |
-|:---------------- |:---------------- |:----------------- |:---- |
-| `flexDirection`  | `flexDirection`  | `flex-direction`  | none |
-| `flexWrap`       | `flexWrap`       | `flex-wrap`       | none |
-| `justifyContent` | `justifyContent` | `justify-content` | none |
-| `alignItems`     | `alignItems`     | `align-items`     | none |
-| `alignContent`   | `alignContent`   | `align-content`   | none |
-| `order`          | `order`          | `order`           | none |
-| `flex`           | `flex`           | `flex`            | none |
-| `flexGrow`       | `flexGrow`       | `flex-grow`       | none |
-| `flexShrink`     | `flexShrink`     | `flex-shrink`     | none |
-| `alignSelf`      | `alignSelf`      | `align-self`      | none |
+| 导入名称             | Prop             | CSS 属性            | Theme key |
+|:---------------- |:---------------- |:----------------- |:--------- |
+| `flexDirection`  | `flexDirection`  | `flex-direction`  | none      |
+| `flexWrap`       | `flexWrap`       | `flex-wrap`       | none      |
+| `justifyContent` | `justifyContent` | `justify-content` | none      |
+| `alignItems`     | `alignItems`     | `align-items`     | none      |
+| `alignContent`   | `alignContent`   | `align-content`   | none      |
+| `order`          | `order`          | `order`           | none      |
+| `flex`           | `flex`           | `flex`            | none      |
+| `flexGrow`       | `flexGrow`       | `flex-grow`       | none      |
+| `flexShrink`     | `flexShrink`     | `flex-shrink`     | none      |
+| `alignSelf`      | `alignSelf`      | `align-self`      | none      |

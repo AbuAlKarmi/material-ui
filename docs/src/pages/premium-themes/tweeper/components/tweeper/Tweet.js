@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
-import ListItem from '@material-ui/core/ListItem/ListItem';
-import { unstable_Box as Box } from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import ListItem from '@material-ui/core/ListItem';
+import Box from '@material-ui/core/Box';
 import atoms from '../atoms';
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ function Tweet() {
   return (
     <ListItem button className={classes.root}>
       <Box mb="5px">
-        <Grid container spacing={8}>
+        <Grid container spacing={1}>
           <Grid item>
             <Box
               display="flex"
@@ -40,17 +40,16 @@ function Tweet() {
           </Grid>
         </Grid>
       </Box>
-      <Grid container spacing={8} wrap="nowrap">
+      <Grid container spacing={3} wrap="nowrap">
         <Grid item>
           <Avatar
             medium
-            src={
-              'https://pbs.twimg.com/profile_images/906557353549598720/oapgW_Fp_reasonably_small.jpg'
-            }
+            alt="Avatar"
+            src="https://pbs.twimg.com/profile_images/1096807971374448640/rVCDhxkG_200x200.png"
           />
         </Grid>
         <Grid item>
-          <Grid container spacing={16}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography bold inline>
                 Dan Abramov

@@ -2,7 +2,7 @@
 
 <p class="description">Quickly and responsively toggle the display value of components and more with our display utilities. Includes support for some of the more common values, as well as some extras for controlling display when printing.</p>
 
-## Examples
+## Ejemplos
 
 ```jsx
 <Box component="div" display="inline">inline</Box>
@@ -66,7 +66,7 @@ For faster mobile-friendly development, use responsive display classes for showi
 import { display } from '@material-ui/system';
 ```
 
-| Import name    | Prop           | CSS property | Theme key |
-|:-------------- |:-------------- |:------------ |:--------- |
-| `displayRaw`   | `display`      | `display`    | none      |
-| `displayPrint` | `displayPrint` | `display`    | none      |
+| Nombre del import | Prop           | Propiedad CSS | Clave del tema |
+|:----------------- |:-------------- |:------------- |:-------------- |
+| `displayRaw`      | `display`      | `display`     | none           |
+| `displayPrint`    | `displayPrint` | `display`     | none           |

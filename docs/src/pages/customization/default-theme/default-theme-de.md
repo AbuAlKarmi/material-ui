@@ -1,13 +1,21 @@
-# Default Theme
+# Standardtheme
 
-<p class="description">Here's what the theme object looks like with the default values.</p>
+<p class="description">So sieht das Designobjekt mit den Standardwerten aus.</p>
+
+## Entdecke
+
+Erkunden Sie das Dokumentationsdesignobjekt:
 
 {{"demo": "pages/customization/default-theme/DefaultTheme.js", "hideEditButton": true}}
 
-The theme normalizes implementation by providing default values for palette, dark and light types, typography, breakpoints, shadows, transitions, etc.
+> Tipp: Sie können mit dem Theme der Dokumentation in ** Ihrer Konsole **spielen. Wir stellen eine ` Theme ` Variable auf allen Dokumentationsseiten zur Verfügung. Bitte beachten Sie, dass die Dokumentationsseite ein benutzerdefiniertes Theme verwendet.
 
-Tip: you can play with the theme object in your console too. **We expose a global `theme` variable on all the pages**.
+Wenn Sie mehr darüber erfahren möchten, wie das Theme zusammengestellt wird, werfen Sie einen Blick auf [` material-ui / style / createMuiTheme.js `](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/styles/createMuiTheme.js), und die zugehörigen Importe, die ` createMuiTheme ` verwendet.
 
-Please take note that the documentation site is using a custom theme. As a result, the demos you see here might disagree with the values above.
+## @material-ui/core/styles vs @material-ui/styles
 
-If you want to learn more about how the theme is assembled, take a look at [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/styles/createMuiTheme.js), and the related imports which `createMuiTheme` uses.
+Material-UI-Stile werden von dem npm paket [ @ material-ui/styles ](/styles/basics/)unterstützt. Es ist eine Styling-Lösung für React. Diese Lösung ist [ isoliert ](https://bundlephobia.com/result?p=@material-ui/styles) und hat keine Kenntnis des Standard-Designs der Material-UI. Um die Notwendigkeit, ein Theme **systematisch** in den React-Kontext einzufügen, nicht mehr zu benötigen, wickeln wir die Stilmodule(`makeStyles`, `withStyles` und `styled`) mit dem Standard-Material-UI-Design:
+
+- `@material-ui/core/styles/makeStyles` wickelt `@material-ui/styles/makeStyles`.
+- `@material-ui/core/styles/withStyles` wickelt `@material-ui/styles/withStyles`.
+- `@material-ui/core/styles/styled` wickelt `@material-ui/styles/styled`.

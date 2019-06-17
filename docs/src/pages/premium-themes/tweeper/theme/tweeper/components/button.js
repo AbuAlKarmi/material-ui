@@ -8,10 +8,10 @@ export default ({ theme, red, white, attach, nest, BUTTON, ICON }) => ({
         fontSize: 20,
       },
       [nest(ICON.left)]: {
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(1),
       },
       [nest(ICON.right)]: {
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
       },
     },
     outlined: {
@@ -52,11 +52,6 @@ export default ({ theme, red, white, attach, nest, BUTTON, ICON }) => ({
     },
     containedPrimary: {
       color: theme.palette.common.white,
-    },
-    extendedFab: {
-      [nest(ICON.root)]: {
-        marginRight: theme.spacing.unit,
-      },
     },
   },
 });

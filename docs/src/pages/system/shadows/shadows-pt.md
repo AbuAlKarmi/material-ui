@@ -1,8 +1,8 @@
-# Shadows
+# Sombras
 
-<p class="description">Add or remove shadows to elements with box-shadow utilities.</p>
+<p class="description">Adicione ou remova sombras dos elementos usando os utilitários box-shadow.</p>
 
-## Example
+## Exemplo
 
 ```jsx
 <Box boxShadow={0}>…
@@ -19,6 +19,6 @@
 import { shadows } from '@material-ui/system';
 ```
 
-| Import name | Prop        | CSS property | Theme key |
-|:----------- |:----------- |:------------ |:--------- |
-| `boxShadow` | `boxShadow` | `box-shadow` | `shadows` |
+| Nome da importação | Prop        | Propriedade CSS | Chave do tema |
+|:------------------ |:----------- |:--------------- |:------------- |
+| `boxShadow`        | `boxShadow` | `box-shadow`    | `shadows`     |

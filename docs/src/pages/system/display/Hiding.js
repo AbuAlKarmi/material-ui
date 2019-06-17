@@ -1,7 +1,7 @@
 import React from 'react';
-import { unstable_Box as Box } from '@material-ui/core/Box';
+import Box from '@material-ui/core/Box';
 
-function Hiding() {
+export default function Hiding() {
   return (
     <div style={{ width: '100%' }}>
       <Box display={{ xs: 'block', md: 'none' }} m={1}>
@@ -13,5 +13,3 @@ function Hiding() {
     </div>
   );
 }
-
-export default Hiding;

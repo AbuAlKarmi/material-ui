@@ -16,31 +16,25 @@ npm install @material-ui/core
 yarn add @material-ui/core
 ```
 
-Note que o pacote possui 2 dependências obrigatórias: [react](https://www.npmjs.com/package/react) >= 16.3.0 e [react-dom](https://www.npmjs.com/package/react-dom) >= 16.3.0.
+Note que o pacote possui 2 dependências obrigatórias: [react](https://www.npmjs.com/package/react) >= 16.8.0 e [react-dom](https://www.npmjs.com/package/react-dom) >= 16.8.0.
 
 ## Fonte Roboto
 
-O Material-UI foi desenvolvido pensando na fonte [Roboto](https://fonts.google.com/specimen/Roboto). Portanto, certifique-se de seguir as [instruções](/style/typography/#general) para obtê-la. Por exemplo, instale-a através do Google Web Fonts:
+O Material-UI foi desenvolvido com base na fonte [Roboto](https://fonts.google.com/specimen/Roboto). Portanto, certifique-se de seguir as [instruções](/components/typography/#general) para obtê-la. Por exemplo, instale-a através do Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-```
-
-Como alternativa, se você estiver utilizando o JSX, use:
-
-```jsx
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
 ```
 
 ## Ícones
 
-Para utilizar o `Icon` componente, você deve primeiro adicionar o pacote [Material icons](https://material.io/tools/icons/). Aqui estão [ algumas instruções ](/style/icons/#font-icons) sobre como fazer isso. Por exemplo, instale-a através do Google Web Fonts:
+Para utilizar o componente font `Icon`, você deve primeiro adicionar o pacote [Material icons](https://material.io/tools/icons/). Aqui estão [ algumas instruções ](/components/icons/#font-icons) sobre como fazer isso. Por exemplo, instale através do Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 ```
 
-Como alternativa, se você estiver utilizando o JSX, use:
+Como alternativa, se você estiver utilizando JSX, use:
 
 ```jsx
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
@@ -48,21 +42,27 @@ Como alternativa, se você estiver utilizando o JSX, use:
 
 ## Ícones SVG
 
-In order to use prebuilt SVG Material icons, such as those found in the [component demos](/demos/app-bar/) you must first install the [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) package:
+Para usar os ícones SVG pré-definidos do Material, como os encontrados na [demonstração de ícones](/components/icons/) você deve primeiro instalar o pacote [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons):
 
 ```sh
+// utilizando o npm
 npm install @material-ui/icons
+
+// utilizando o yarn
+yarn add @material-ui/icons
 ```
 
 ## CDN
 
-You can start using Material-UI with minimal Front-end infrastructure, which is great for prototyping. We discourage using this approach in production though - the client has to download the entire library, regardless of which components are actually used, affecting performance and bandwidth utilisation.
+Você pode começar a utilizar o Material-UI com o mínimo de infraestrutura de frontend, o que é bom para prototipação.
 
-#### UMD releases
+Nós estamos fornecendo dois arquivos no padrão Universal Module Definition (**UMD**):
 
-We are providing two Universal Module Definition (UMD) files:
+- um para desenvolvimento: https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js
+- um para a produção: https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js
 
-- one for development: https://unpkg.com/@material-ui/core/umd/material-ui.development.js
-- one for production: https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js
+Você pode seguir [esse exemplo de CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn) para rapidamente começar.
 
-You can follow [this CDN example](https://github.com/mui-org/material-ui/tree/master/examples/cdn) to quickly get started.
+⚠️ Nós, porém, não **recomendamos** utilizar esse método no ambiente de **produção** - o cliente precisa baixar a biblioteca inteira, independente de quais componentes realmente são utilizados, afetando o desempenho e o uso de banda.
+
+⚠️ Os links UMD estão usando a `última` tag para apontar para a versão mais recente da biblioteca. Dessa forma aponta para uma versão **instável**, muda a medida que lançamos novas versões. Você deve considerar apontar para uma versão específica como [v3.9.3](https://unpkg.com/@material-ui/core@3.9.3/umd/material-ui.development.js).

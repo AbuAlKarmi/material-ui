@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { assert } from 'chai';
 import { createMount, findOutermostIntrinsic, getClasses } from '@material-ui/core/test-utils';
+import describeConformance from '../test-utils/describeConformance';
 import FormHelperText from './FormHelperText';
 import FormControlContext from '../FormControl/FormControlContext';
 
@@ -10,23 +11,21 @@ describe('<FormHelperText />', () => {
   let classes;
 
   before(() => {
-    mount = createMount();
+    mount = createMount({ strict: true });
     classes = getClasses(<FormHelperText />);
   });
 
-  it('should render a <p />', () => {
-    const wrapper = findOutermostIntrinsic(mount(<FormHelperText className="woofHelperText" />));
-    assert.strictEqual(wrapper.name(), 'p');
-    assert.strictEqual(wrapper.hasClass(classes.root), true);
-    assert.strictEqual(wrapper.hasClass('woofHelperText'), true);
+  after(() => {
+    mount.cleanUp();
   });
 
-  describe('prop: component', () => {
-    it('should render the prop component', () => {
-      const wrapper = findOutermostIntrinsic(mount(<FormHelperText component="div" />));
-      assert.strictEqual(wrapper.name(), 'div');
-    });
-  });
+  describeConformance(<FormHelperText />, () => ({
+    classes,
+    inheritComponent: 'p',
+    mount,
+    refInstanceof: window.HTMLParagraphElement,
+    testComponentPropWith: 'div',
+  }));
 
   describe('prop: error', () => {
     it('should have an error class', () => {

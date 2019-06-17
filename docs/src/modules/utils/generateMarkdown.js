@@ -1,16 +1,16 @@
-/* eslint-disable react/forbid-foreign-prop-types */
+/* eslint-disable react/forbid-foreign-prop-types, no-underscore-dangle */
 
 import { parse as parseDoctrine } from 'doctrine';
 import recast from 'recast';
 import { parse as docgenParse } from 'react-docgen';
-import { _rewriteUrlForNextExport } from 'next/router';
+import { Router } from 'next/router';
 import { pageToTitle } from './helpers';
-import { LANGUAGES } from 'docs/src/modules/constants';
+import { LANGUAGES_IN_PROGRESS } from 'docs/src/modules/constants';
 
 const SOURCE_CODE_ROOT_URL = 'https://github.com/mui-org/material-ui/blob/master';
 const PATH_REPLACE_REGEX = /\\/g;
 const PATH_SEPARATOR = '/';
-const DEMO_IGNORE = LANGUAGES.map(language => `-${language}.md`);
+const DEMO_IGNORE = LANGUAGES_IN_PROGRESS.map(language => `-${language}.md`);
 
 function normalizePath(path) {
   return path.replace(PATH_REPLACE_REGEX, PATH_SEPARATOR);
@@ -37,20 +37,30 @@ function getDeprecatedInfo(type) {
 }
 
 function getChained(type) {
-  const marker = 'chainPropTypes';
-  const indexStart = type.raw.indexOf(marker);
+  if (type.raw) {
+    const marker = 'chainPropTypes';
+    const indexStart = type.raw.indexOf(marker);
 
-  if (indexStart !== -1) {
-    const parsed = docgenParse(`
-      import PropTypes from 'prop-types';
-      const Foo = () => <div />
-      Foo.propTypes = {
-        bar: ${recast.print(recast.parse(type.raw).program.body[0].expression.arguments[0]).code}
-      }
-      export default Foo
-    `);
-
-    return parsed.props.bar.type;
+    if (indexStart !== -1) {
+      const parsed = docgenParse(
+        `
+        import PropTypes from 'prop-types';
+        const Foo = () => <div />
+        Foo.propTypes = {
+          bar: ${recast.print(recast.parse(type.raw).program.body[0].expression.arguments[0]).code}
+        }
+        export default Foo
+      `,
+        null,
+        null,
+        // helps react-docgen pickup babel.config.js
+        { filename: './' },
+      );
+      return {
+        type: parsed.props.bar.type,
+        required: parsed.props.bar.required,
+      };
+    }
   }
 
   return false;
@@ -64,7 +74,17 @@ function escapeCell(value) {
     .replace(/\|/g, '\\|');
 }
 
-function generatePropDescription(description, type) {
+function isElementTypeAcceptingRefProp(type) {
+  return type.raw === 'elementTypeAcceptingRef';
+}
+
+function isElementAcceptingRefProp(type) {
+  return /^elementAcceptingRef/.test(type.raw);
+}
+
+function generatePropDescription(prop) {
+  const { description } = prop;
+  const type = prop.flowType || prop.type;
   let deprecated = '';
 
   if (type.name === 'custom') {
@@ -81,9 +101,8 @@ function generatePropDescription(description, type) {
   // Two new lines result in a newline in the table.
   // All other new lines must be eliminated to prevent markdown mayhem.
   const jsDocText = escapeCell(parsed.description)
-    .replace(/\n\n/g, '<br>')
-    .replace(/\n/g, ' ')
-    .replace(/\r/g, '');
+    .replace(/(\r?\n){2}/g, '<br>')
+    .replace(/\r?\n/g, ' ');
 
   if (parsed.tags.some(tag => tag.title === 'ignore')) {
     return null;
@@ -134,12 +153,24 @@ function generatePropDescription(description, type) {
     }
   }
 
-  return `${deprecated}${jsDocText}${signature}`;
+  let notes = '';
+  if (isElementAcceptingRefProp(type) || isElementTypeAcceptingRefProp(type)) {
+    notes += '<br>⚠️ [Needs to be able to hold a ref](/guides/composition/#caveat-with-refs).';
+  }
+
+  return `${deprecated}${jsDocText}${signature}${notes}`;
 }
 
 function generatePropType(type) {
   switch (type.name) {
     case 'custom': {
+      if (isElementTypeAcceptingRefProp(type)) {
+        return `element type`;
+      }
+      if (isElementAcceptingRefProp(type)) {
+        return `element`;
+      }
+
       const deprecatedInfo = getDeprecatedInfo(type);
       if (deprecatedInfo !== false) {
         return generatePropType({
@@ -149,11 +180,7 @@ function generatePropType(type) {
 
       const chained = getChained(type);
       if (chained !== false) {
-        return generatePropType(chained);
-      }
-
-      if (type.raw === 'componentPropType') {
-        return 'Component';
+        return generatePropType(chained.type);
       }
 
       return type.raw;
@@ -214,16 +241,16 @@ function generateProps(reactAPI) {
     const prop = getProp(reactAPI.props, propRaw);
 
     if (typeof prop.description === 'undefined') {
-      throw new Error(`The "${propRaw}"" property is missing a description`);
+      throw new Error(`The "${propRaw}" property is missing a description`);
     }
 
-    const description = generatePropDescription(prop.description, prop.flowType || prop.type);
+    const description = generatePropDescription(prop);
 
     if (description === null) {
       return textProps;
     }
 
-    let defaultValue = '\u00a0';
+    let defaultValue = '';
 
     if (prop.defaultValue) {
       defaultValue = `<span class="prop-default">${escapeCell(
@@ -231,8 +258,14 @@ function generateProps(reactAPI) {
       )}</span>`;
     }
 
-    if (prop.required) {
-      propRaw = `<span class="prop-name required">${propRaw}\u00a0*</span>`;
+    const chainedPropType = getChained(prop.type);
+
+    if (
+      prop.required ||
+      /\.isRequired/.test(prop.type.raw) ||
+      (chainedPropType !== false && chainedPropType.required)
+    ) {
+      propRaw = `<span class="prop-name required">${propRaw}&nbsp;*</span>`;
     } else {
       propRaw = `<span class="prop-name">${propRaw}</span>`;
     }
@@ -250,11 +283,19 @@ function generateProps(reactAPI) {
     return textProps;
   }, text);
 
+  let refHint = 'The `ref` is forwarded to the root element.';
+  if (reactAPI.forwardsRefTo == null) {
+    refHint = 'The component cannot hold a ref.';
+  } else if (reactAPI.forwardsRefTo === 'React.Component') {
+    refHint = 'The `ref` is attached to a component class.';
+  }
+  text = `${text}\n${refHint}\n`;
+
   if (reactAPI.spread) {
     text = `${text}
-Any other properties supplied will be spread to the root element (${
+Any other properties supplied will be provided to the root element (${
       reactAPI.inheritance
-        ? `[${reactAPI.inheritance.component}](${_rewriteUrlForNextExport(
+        ? `[${reactAPI.inheritance.component}](${Router._rewriteUrlForNextExport(
             reactAPI.inheritance.pathname,
           )})`
         : 'native element'
@@ -299,7 +340,7 @@ This property accepts the following keys:
 
 ${text}
 
-Have a look at [overriding with classes](/customization/overrides/#overriding-with-classes) section
+Have a look at the [overriding styles with classes](/customization/components/#overriding-styles-with-classes) section
 and the [implementation of the component](${SOURCE_CODE_ROOT_URL}${normalizePath(
     reactAPI.filename,
   )})
@@ -325,17 +366,13 @@ function generateInheritance(reactAPI) {
       suffix = ', from react-transition-group,';
       break;
 
-    case 'EventListener':
-      suffix = ', from react-event-listener,';
-      break;
-
     default:
       break;
   }
 
   return `## Inheritance
 
-The properties of the [${inheritance.component}](${_rewriteUrlForNextExport(
+The properties of the [${inheritance.component}](${Router._rewriteUrlForNextExport(
     inheritance.pathname,
   )}) component${suffix} are also available.
 You can take advantage of this behavior to [target nested components](/guides/api/#spread).
@@ -359,7 +396,7 @@ function generateDemos(reactAPI) {
   return `## Demos
 
 ${pagesMarkdown
-  .map(page => `- [${pageToTitle(page)}](${_rewriteUrlForNextExport(page.pathname)})`)
+  .map(page => `- [${pageToTitle(page)}](${Router._rewriteUrlForNextExport(page.pathname)})`)
   .join('\n')}
 
 `;
@@ -381,6 +418,20 @@ import ${reactAPI.name} from '${source}';
 \`\`\``;
 }
 
+function generateNotes(reactAPI) {
+  const { strictModeReady } = reactAPI;
+  const strictModeLinked = '[StrictMode](https://reactjs.org/docs/strict-mode.html)';
+  return `## Notes
+
+The component ${
+    !strictModeReady
+      ? `can cause issues in ${strictModeLinked}`
+      : `is fully ${strictModeLinked} compatible`
+  }.
+
+`;
+}
+
 export default function generateMarkdown(reactAPI) {
   return [
     generateHeader(reactAPI),
@@ -398,6 +449,8 @@ export default function generateMarkdown(reactAPI) {
     '',
     generateProps(reactAPI),
     '',
-    `${generateClasses(reactAPI)}${generateInheritance(reactAPI)}${generateDemos(reactAPI)}`,
+    `${generateClasses(reactAPI)}${generateInheritance(reactAPI)}${generateNotes(
+      reactAPI,
+    )}${generateDemos(reactAPI)}`,
   ].join('\n');
 }

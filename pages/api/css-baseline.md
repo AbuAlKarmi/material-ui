@@ -20,8 +20,14 @@ Kickstart an elegant, consistent, and simple baseline to build upon.
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name">children</span> | <span class="prop-type">node</span> | <span class="prop-default">null</span> | You can wrap a node. |
 
+The component cannot hold a ref.
+
+
+## Notes
+
+The component can cause issues in [StrictMode](https://reactjs.org/docs/strict-mode.html).
 
 ## Demos
 
-- [Css Baseline](/style/css-baseline/)
+- [Css Baseline](/components/css-baseline/)
 

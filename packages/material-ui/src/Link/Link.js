@@ -1,11 +1,10 @@
-// @inheritedComponent Typography
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { componentPropType } from '@material-ui/utils';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { capitalize } from '../utils/helpers';
 import withStyles from '../styles/withStyles';
+import { useIsFocusVisible } from '../utils/focusVisible';
+import { useForkRef } from '../utils/reactHelpers';
 import Typography from '../Typography';
 
 export const styles = {
@@ -47,54 +46,80 @@ export const styles = {
     '&::-moz-focus-inner': {
       borderStyle: 'none', // Remove Firefox dotted outline.
     },
+    '&$focusVisible': {
+      outline: 'auto',
+    },
   },
+  /* Pseudo-class applied to the root element if the link is keyboard focused. */
+  focusVisible: {},
 };
 
-function Link(props) {
+const Link = React.forwardRef(function Link(props, ref) {
   const {
-    block,
-    children,
     classes,
-    className: classNameProp,
-    component,
+    className,
+    color = 'primary',
+    component = 'a',
+    onBlur,
+    onFocus,
     TypographyClasses,
-    underline,
+    underline = 'hover',
+    variant = 'inherit',
     ...other
   } = props;
 
+  const { isFocusVisible, onBlurVisible, ref: focusVisibleRef } = useIsFocusVisible();
+  const [focusVisible, setFocusVisible] = React.useState(false);
+  const handlerRef = useForkRef(ref, focusVisibleRef);
+  const handleBlur = event => {
+    if (focusVisible) {
+      onBlurVisible();
+      setFocusVisible(false);
+    }
+    if (onBlur) {
+      onBlur(event);
+    }
+  };
+  const handleFocus = event => {
+    if (isFocusVisible(event)) {
+      setFocusVisible(true);
+    }
+    if (onFocus) {
+      onFocus(event);
+    }
+  };
+
   return (
     <Typography
-      className={classNames(
+      className={clsx(
         classes.root,
         {
           [classes.button]: component === 'button',
+          [classes.focusVisible]: focusVisible,
         },
         classes[`underline${capitalize(underline)}`],
-        classNameProp,
+        className,
       )}
       classes={TypographyClasses}
+      color={color}
       component={component}
-      inline={!block}
+      onBlur={handleBlur}
+      onFocus={handleFocus}
+      ref={handlerRef}
+      variant={variant}
       {...other}
-    >
-      {children}
-    </Typography>
+    />
   );
-}
+});
 
 Link.propTypes = {
-  /**
-   *  Controls whether the link is inline or not. When `block` is true the link is not inline
-   *  when `block` is false it is.
-   */
-  block: PropTypes.bool,
   /**
    * The content of the link.
    */
   children: PropTypes.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css-api) below for more details.
+   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object.isRequired,
   /**
@@ -105,6 +130,7 @@ Link.propTypes = {
    * The color of the link.
    */
   color: PropTypes.oneOf([
+    'default',
     'error',
     'inherit',
     'primary',
@@ -116,7 +142,15 @@ Link.propTypes = {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component: componentPropType,
+  component: PropTypes.elementType,
+  /**
+   * @ignore
+   */
+  onBlur: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onFocus: PropTypes.func,
   /**
    * `classes` property applied to the [`Typography`](/api/typography/) element.
    */
@@ -129,14 +163,6 @@ Link.propTypes = {
    * Applies the theme typography styles.
    */
   variant: PropTypes.string,
-};
-
-Link.defaultProps = {
-  block: false,
-  color: 'primary',
-  component: 'a',
-  underline: 'hover',
-  variant: 'inherit',
 };
 
 export default withStyles(styles, { name: 'MuiLink' })(Link);

@@ -1,20 +1,20 @@
-# Material-UI 版本号
+# Material-UI 的不同版本
 
-<p class="description">你可以在任意时间回到本页切换文档的版本。</p>
+<p class="description">你可以随时回到本页来切换不同版本的文档。</p>
 
 ## 稳定版本
 
-我们推荐在生产环境中使用最新版本。
+我们推荐在生产开发中使用最新版本。
 
 {{"demo": "pages/versions/StableVersions.js", "hideHeader": true}}
 
-## 最新版本
+## Latest versions
 
-在这里您可以找到尚未发布的最新文档和代码。 你可以使用它来查看最新的更新内容, 并为 Material-UI 的贡献者提供更好的反馈。
+在这里您可以找到尚未发布的最新文档和代码。 您可以使用它来查看即将实施的更新 , 并给 Material-UI 的贡献者提供更好的反馈。
 
-{{"demo": "pages/versions/LatestVersion.js", "hideHeader": true}}
+{{"demo": "pages/versions/LatestVersions.js", "hideHeader": true}}
 
-## 版本控制策略
+## 版本控制方案
 
 我们认识到您需要来自Material-UI库的**稳定性**. 稳定性确保可重用组件和库、教程、工具和学习教程不会意外过时. 稳定性对于Material-UI蓬勃发展的生态系统至关重要.
 
@@ -32,7 +32,7 @@ Material-UI 严格遵循 [Semantic Versioning 2.0.0](https://semver.org/) 语义
 
 通常情况下, 你可以根据以下的发布周期来预测:
 
-- 每六个月发布一个**主版本**。
+- A **major** release every 6-12 months.
 - 每个主版本会附带1-3个向下兼容的**次版本**。
 - 每周会进行**日常**更新 (如果有紧急的 bugfix，则任何时候都可发布)。
 
@@ -40,10 +40,11 @@ Material-UI 严格遵循 [Semantic Versioning 2.0.0](https://semver.org/) 语义
 
 > 免责声明: 日期作为一般指导提供, 我们可以在必要时调整, 以确保交付高质量的代码。
 
-| 日期      | 版本                         |
-|:------- |:-------------------------- |
-| 2019年1月 | `@material-ui/core` v4.0.0 |
-| 2019年7月 | `@material-ui/core` v5.0.0 |
+| 日期         | 版本                         |
+|:---------- |:-------------------------- |
+| May 2018 ✅ | `@material-ui/core` v1.0.0 |
+| May 2019 ✅ | `@material-ui/core` v4.0.0 |
+| ? ⏳        | `@material-ui/core` v5.0.0 |
 
 你可以在 [ 我们的里程碑 ](https://github.com/mui-org/material-ui/milestones) 中查看更详细的概述。
 

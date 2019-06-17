@@ -12,7 +12,7 @@ Using `withStyles` in TypeScript can be a little tricky, but there are some util
 
 ### Using `createStyles` to defeat type widening
 
-A frequent source of confusion is TypeScript's [type widening](https://blog.mariusschulz.com/2017/02/04/typescript-2-1-literal-type-widening), which causes this example not to work as expected:
+A frequent source of confusion is TypeScript's [type widening](https://mariusschulz.com/blog/typescript-2-1-literal-type-widening), which causes this example not to work as expected:
 
 ```ts
 const styles = {
@@ -97,7 +97,7 @@ const styles = createStyles({
 });
 ```
 
-However to allow these styles to pass TypeScript the definitions have to be ambiguous concerning names for CSS classes and actual CSS property names. Due to this class names that are equal to CSS properties should be avoided.
+However to allow these styles to pass TypeScript, the definitions have to be ambiguous concerning names for CSS classes and actual CSS property names. Due to this class names that are equal to CSS properties should be avoided.
 
 ```ts
 // error because TypeScript thinks `@media (min-width: 960px)` is a class name
@@ -150,7 +150,7 @@ interface Props {
 }
 ```
 
-However this isn't very [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) because it requires you to maintain the class names (`'root'`, `'paper'`, `'button'`, ...) in two different places. We provide a type operator `WithStyles` to help with this, so that you can just write
+However this isn't very [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) because it requires you to maintain the class names (`'root'`, `'paper'`, `'button'`, ...) in two different places. We provide a type operator `WithStyles` to help with this, so that you can just write:
 
 ```ts
 import { WithStyles, createStyles } from '@material-ui/core';
@@ -196,7 +196,7 @@ Unfortunately due to a [current limitation of TypeScript decorators](https://git
 
 ## Customization of `Theme`
 
-When adding custom properties to the `Theme`, you may continue to use it in a strongly typed way by exploiting [Typescript's module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+When adding custom properties to the `Theme`, you may continue to use it in a strongly typed way by exploiting [TypeScript's module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
 
 The following example adds an `appDrawer` property that is merged into the one exported by `material-ui`:
 
@@ -249,61 +249,6 @@ const theme = createMyTheme({ appDrawer: { breakpoint: 'md' }});
 
 ## Usage of `component` property
 
-Material-UI allows you to replace a component's root node via a `component` property. For example, a `Button`'s root node can be replaced with a React Router `Link`, and any additional props that are passed to `Button`, such as `to`, will be spread to the `Link` component, meaning you can do this:
+Material-UI allows you to replace a component's root node via a `component` property. For example, a `Button`'s root node can be replaced with a React Router `Link`, and any additional props that are passed to `Button`, such as `to`, will be spread to the `Link` component. For a code example concerning `Button` and `react-router-dom` checkout [this Button demo](/components/buttons/#third-party-routing-library).
 
-```jsx
-import { Link } from 'react-router-dom';
-
-<Button component={Link} to="/">Go Home</Button>
-```
-
-However, TypeScript will complain about it, because `to` is not part of the `ButtonProps` interface, and with the current type declarations it has no way of inferring what props can be passed to `component`.
-
-The current workaround is to cast Link to `any`:
-
-```tsx
-import { Link } from 'react-router-dom';
-import Button, { ButtonProps } from '@material-ui/core/Button';
-
-interface LinkButtonProps extends ButtonProps {
-  to: string;
-  replace?: boolean;
-}
-
-const LinkButton = (props: LinkButtonProps) => (
-  <Button {...props} component={Link as any} />
-)
-
-// usage:
-<LinkButton color="primary" to="/">Go Home</LinkButton>
-```
-
-Material-UI components pass some basic event handler props (`onClick`, `onDoubleClick`, etc.) to their root nodes. These handlers have a signature of:
-
-```ts
-(event: MouseEvent<HTMLElement, MouseEvent>) => void
-```
-
-which is incompatible with the event handler signatures that `Link` expects, which are:
-
-```ts
-(event: MouseEvent<AnchorElement>) => void
-```
-
-Any element or component that you pass into `component` will have this problem if the signatures of their event handler props don't match.
-
-There is an ongoing effort to fix this by making component props generic.
-
-### Avoiding properties collision
-
-The previous strategy suffers from a little limitation: properties collision. The component providing the `component` property might not forward all its properties to the root element. To workaround this issue, you can create a custom component:
-
-```tsx
-import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-
-const MyLink = (props: any) => <Link to="/" {...props} />;
-
-// usage:
-<Button color="primary" component={MyLink}>Go Home</Button>
-```
+Not every component fully supports any component type you pass in. If you encounter a component that rejects its `component` props in TypeScript please open an issue. There is an ongoing effort to fix this by making component props generic.

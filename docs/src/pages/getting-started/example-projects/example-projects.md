@@ -5,9 +5,11 @@
 We host some example projects which you can find in the [GitHub repository](https://github.com/mui-org/material-ui) under the [`/examples`](https://github.com/mui-org/material-ui/tree/master/examples) folder:
 
 - [Create React App](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app)
-- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
 - [Gatsby](https://github.com/mui-org/material-ui/tree/master/examples/gatsby)
+- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
+- [Parcel](https://github.com/mui-org/material-ui/tree/master/examples/parcel)
 - [CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn)
+- [Plain server-side](https://github.com/mui-org/material-ui/tree/master/examples/ssr)
 - And more
 
 Create React App is an awesome project for learning React.
@@ -29,3 +31,9 @@ If you want to start with a more complete and real world example, you could take
   - React Router included with a navigation example
   - A docker container with an Nginx server for production build
   - Created with [Create React App](https://facebook.github.io/create-react-app/)
+
+- [React + Material-UI + Firebase](https://github.com/Phoqe/react-material-ui-firebase):
+  - Bootstrapped with Create React App, the same tooling works out of the box
+  - Built on top of Firebase with authentication working from the start
+  - Robust routing with React Router including error handling (404)
+  - Extensive mobile support with [react-swipeable-views](https://react-swipeable-views.com) for tabs

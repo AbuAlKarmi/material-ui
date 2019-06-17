@@ -1,8 +1,8 @@
-# Palette
+# Палитра
 
 <p class="description">Convey meaning through color with a handful of color utility classes. Includes support for styling links with hover states, too.</p>
 
-## Color
+## Цвет
 
 ```jsx
 <Box color="primary.main">…
@@ -36,7 +36,7 @@
 import { palette } from '@material-ui/system';
 ```
 
-| Import name | Prop      | CSS property      | Theme key                                                        |
-|:----------- |:--------- |:----------------- |:---------------------------------------------------------------- |
-| `color`     | `color`   | `color`           | [`palette`](/customization/default-theme/?expend-path=$.palette) |
-| `bgcolor`   | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expend-path=$.palette) |
+| Импорт    | Свойство  | Свойство CSS      | В теме                                                           |
+|:--------- |:--------- |:----------------- |:---------------------------------------------------------------- |
+| `color`   | `color`   | `color`           | [`palette`](/customization/default-theme/?expend-path=$.palette) |
+| `bgcolor` | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expend-path=$.palette) |

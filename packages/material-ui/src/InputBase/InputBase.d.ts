@@ -9,13 +9,13 @@ export interface InputBaseProps
   > {
   autoComplete?: string;
   autoFocus?: boolean;
-  defaultValue?: Array<string | number | boolean | object> | string | number | boolean | object;
+  defaultValue?: unknown;
   disabled?: boolean;
   endAdornment?: React.ReactNode;
   error?: boolean;
   fullWidth?: boolean;
   id?: string;
-  inputComponent?: React.ReactType<InputBaseComponentProps>;
+  inputComponent?: React.ElementType<InputBaseComponentProps>;
   inputProps?: InputBaseComponentProps;
   inputRef?: React.Ref<any> | React.RefObject<any>;
   margin?: 'dense' | 'none';
@@ -37,7 +37,7 @@ export interface InputBaseProps
   rowsMax?: string | number;
   startAdornment?: React.ReactNode;
   type?: string;
-  value?: Array<string | number | boolean | object> | string | number | boolean | object;
+  value?: unknown;
   onFilled?: () => void;
   /**
    * `onChange`, `onKeyUp` + `onKeyDown` are applied to the inner `InputComponent`,
@@ -63,15 +63,18 @@ export type InputBaseClassKey =
   | 'formControl'
   | 'focused'
   | 'disabled'
+  | 'adornedEnd'
+  | 'adornedStart'
   | 'error'
+  | 'marginDense'
   | 'multiline'
   | 'fullWidth'
   | 'input'
   | 'inputMarginDense'
-  | 'inputDisabled'
   | 'inputMultiline'
-  | 'inputType'
-  | 'inputTypeSearch';
+  | 'inputTypeSearch'
+  | 'inputAdornedStart'
+  | 'inputAdornedEnd';
 
 declare const InputBase: React.ComponentType<InputBaseProps>;
 

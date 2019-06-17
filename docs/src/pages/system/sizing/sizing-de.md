@@ -1,10 +1,10 @@
-# Sizing
+# Dimensionierung
 
-<p class="description">Easily make an element as wide or as tall (relative to its parent) with our width and height utilities.</p>
+<p class="description">Mit unseren Hilfsmitteln für Breite und Höhe können Sie ein Element problemlos so breit oder so groß (relativ zu seinem übergeordneten Element) machen, wie sie wollen.</p>
 
-## Supported values
+## Unterstützte Werte
 
-The sizing style functions support different property input type:
+Die Größenstilfunktionen unterstützen verschiedene Eigenschafteneingabetypen:
 
 ```jsx
 <Box width={1/4}> // Números em [0,1] são multiplicados por 100 e convertido em % valores.
@@ -15,7 +15,7 @@ The sizing style functions support different property input type:
 
 {{"demo": "pages/system/sizing/Values.js"}}
 
-## Width
+## Breite
 
 ```jsx
 <Box width="25%">…
@@ -27,7 +27,7 @@ The sizing style functions support different property input type:
 
 {{"demo": "pages/system/sizing/Width.js"}}
 
-## Height
+## Höhe
 
 ```jsx
 <Box height="25%">…
@@ -44,11 +44,11 @@ The sizing style functions support different property input type:
 import { sizing } from '@material-ui/system';
 ```
 
-| Import name | Prop        | CSS property | Theme key |
-|:----------- |:----------- |:------------ |:--------- |
-| `width`     | `width`     | `width`      | none      |
-| `maxWidth`  | `maxWidth`  | `max-width`  | none      |
-| `minWidth`  | `minWidth`  | `min-width`  | none      |
-| `height`    | `height`    | `height`     | none      |
-| `maxHeight` | `maxHeight` | `max-height` | none      |
-| `minHeight` | `minHeight` | `min-height` | none      |
+| Inportname  | Eigenschaften | CSS-Eigenschaft | Theme-Schlüssel |
+|:----------- |:------------- |:--------------- |:--------------- |
+| `width`     | `width`       | `width`         | none            |
+| `maxWidth`  | `maxWidth`    | `max-width`     | none            |
+| `minWidth`  | `minWidth`    | `min-width`     | none            |
+| `height`    | `height`      | `height`        | none            |
+| `maxHeight` | `maxHeight`   | `max-height`    | none            |
+| `minHeight` | `minHeight`   | `min-height`    | none            |

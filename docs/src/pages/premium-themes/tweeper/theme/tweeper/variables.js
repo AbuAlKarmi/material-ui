@@ -10,7 +10,6 @@ const theme = createMuiTheme({
   typography: {
     fontSize: 15,
     fontWeightRegular: 500,
-    useNextVariants: true,
     // Use the system font instead of the default Roboto font.
     fontFamily: [
       '-apple-system',
@@ -31,9 +30,7 @@ const theme = createMuiTheme({
   palette: {
     primary,
   },
-  spacing: {
-    unit: 4,
-  },
+  spacing: 4,
   props: {
     MuiButtonBase: {
       disableRipple: true,

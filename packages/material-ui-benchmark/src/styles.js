@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 
-import './bootstrap';
 import Benchmark from 'benchmark';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -9,9 +8,9 @@ import styledEmotion from '@emotion/styled';
 import { css } from '@emotion/core';
 import { renderStylesToString } from 'emotion-server';
 import injectSheet, { JssProvider, SheetsRegistry } from 'react-jss';
-import { withStyles, makeStyles, StylesProvider } from '@material-ui/styles';
+import { styled as styledMui, withStyles, makeStyles, StylesProvider } from '@material-ui/styles';
 import jss, { getDynamicStyles } from 'jss';
-import { unstable_Box as Box } from '@material-ui/core/Box/Box';
+import Box from '@material-ui/core/Box';
 
 const suite = new Benchmark.Suite('styles', {
   onError: event => {
@@ -76,6 +75,7 @@ const WithStylesButton = withStyles(cssObject)(props => (
 ));
 
 const EmotionButton = styledEmotion('button')(cssObject.root);
+const StyledMuiButton = styledMui('button')(cssObject.root);
 
 const StyledComponentsButton = styledComponents.button`${cssContent}`;
 
@@ -89,6 +89,17 @@ const NakedButton = props => <button type="submit" {...props} />;
 const EmotionCssButton = props => <button type="submit" css={emotionCss} {...props} />;
 
 suite
+  .add('StyledMuiButton', () => {
+    const sheetsRegistry = new SheetsRegistry();
+    ReactDOMServer.renderToString(
+      <StylesProvider sheetsManager={new Map()} sheetsRegistry={sheetsRegistry}>
+        {Array.from(new Array(5)).map((_, index) => (
+          <StyledMuiButton key={String(index)}>Material-UI</StyledMuiButton>
+        ))}
+      </StylesProvider>,
+    );
+    sheetsRegistry.toString();
+  })
   .add('Box', () => {
     const sheetsRegistry = new SheetsRegistry();
     ReactDOMServer.renderToString(

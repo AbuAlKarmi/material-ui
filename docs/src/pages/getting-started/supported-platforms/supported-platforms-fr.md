@@ -10,13 +10,13 @@ Material-UI prend en charge les dernières versions stables de tous les principa
 |:-- |:----- |:------- |:------ |:------ |:--------- |
 | 11 | >= 14 | >= 52   | >= 49  | >= 10  | ✅         |
 
-Étant donné que Googlebot utilise un service de rendu Web (WRS) pour indexer le contenu de la page, il est essentiel que Material-UI le prenne en charge. [WRS est basé sur Chrome 41](https://developers.google.com/search/docs/guides/rendering). Vous pouvez vous attendre à ce que les composants de Material-UI soient rendus sans problèmes majeurs.
+Étant donné que Googlebot utilise un service de rendu Web (WRS) pour indexer le contenu de la page, il est essentiel que Material-UI le prenne en charge. [WRS regularly updates the rendering engine it uses](https://webmasters.googleblog.com/2019/05/the-new-evergreen-googlebot.html). Vous pouvez vous attendre à ce que les composants de Material-UI soient rendus sans problèmes majeurs.
 
 ## Serveur
 
-Because Material-UI supports server-side rendering, we need to support the latest, stable releases of [Node.js](https://github.com/nodejs/node). We try to support the [last active LTS version](https://github.com/nodejs/Release#lts-schedule1). Right now, we support **node v6.x** and newer versions.
+Parce que Material-UI prend en charge le rendu côté serveur, nous devons prendre en charge les dernières versions stables de [Node.js.](https://github.com/nodejs/node). Nous essayons également de supporter les [versions LTS en maintenance](https://github.com/nodejs/Release#lts-schedule1) . Actuellement, nous supportons node **v8.x** et les nouvelles versions.
 
-### CSS prefixing
+### Préfixes CSS
 
 Be aware that some CSS features [require](https://github.com/cssinjs/jss/issues/279) an additional postprocessing step that adds vendor specific prefixes. These prefixes are automatically added on the client thanks to [`jss-plugin-vendor-prefixer`](https://www.npmjs.com/package/jss-plugin-vendor-prefixer).
 

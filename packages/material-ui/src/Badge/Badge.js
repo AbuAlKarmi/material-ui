@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { componentPropType } from '@material-ui/utils';
+import clsx from 'clsx';
 import withStyles from '../styles/withStyles';
 import { capitalize } from '../utils/helpers';
 
@@ -76,32 +75,30 @@ export const styles = theme => ({
   },
 });
 
-function Badge(props) {
+const Badge = React.forwardRef(function Badge(props, ref) {
   const {
     badgeContent,
     children,
     classes,
     className,
-    color,
-    component: ComponentProp,
+    color = 'default',
+    component: ComponentProp = 'span',
     invisible: invisibleProp,
-    showZero,
-    max,
-    variant,
+    max = 99,
+    showZero = false,
+    variant = 'standard',
     ...other
   } = props;
 
   let invisible = invisibleProp;
 
-  if (invisibleProp == null && Number(badgeContent) === 0 && !showZero) {
+  if (
+    invisibleProp == null &&
+    ((badgeContent === 0 && !showZero) || (badgeContent == null && variant !== 'dot'))
+  ) {
     invisible = true;
   }
 
-  const badgeClassName = classNames(classes.badge, {
-    [classes[`color${capitalize(color)}`]]: color !== 'default',
-    [classes.invisible]: invisible,
-    [classes.dot]: variant === 'dot',
-  });
   let displayValue = '';
 
   if (variant !== 'dot') {
@@ -109,12 +106,20 @@ function Badge(props) {
   }
 
   return (
-    <ComponentProp className={classNames(classes.root, className)} {...other}>
+    <ComponentProp className={clsx(classes.root, className)} ref={ref} {...other}>
       {children}
-      <span className={badgeClassName}>{displayValue}</span>
+      <span
+        className={clsx(classes.badge, {
+          [classes[`color${capitalize(color)}`]]: color !== 'default',
+          [classes.invisible]: invisible,
+          [classes.dot]: variant === 'dot',
+        })}
+      >
+        {displayValue}
+      </span>
     </ComponentProp>
   );
-}
+});
 
 Badge.propTypes = {
   /**
@@ -127,7 +132,7 @@ Badge.propTypes = {
   children: PropTypes.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css-api) below for more details.
+   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object.isRequired,
   /**
@@ -142,7 +147,7 @@ Badge.propTypes = {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component: componentPropType,
+  component: PropTypes.elementType,
   /**
    * If `true`, the badge will be invisible.
    */
@@ -159,14 +164,6 @@ Badge.propTypes = {
    * The variant to use.
    */
   variant: PropTypes.oneOf(['standard', 'dot']),
-};
-
-Badge.defaultProps = {
-  color: 'default',
-  component: 'span',
-  max: 99,
-  showZero: false,
-  variant: 'standard',
 };
 
 export default withStyles(styles, { name: 'MuiBadge' })(Badge);

@@ -1,5 +1,4 @@
 /* eslint-disable react/prefer-stateless-function */
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import { assert } from 'chai';
 import getDisplayName, { getFunctionName } from './getDisplayName';
@@ -27,13 +26,31 @@ describe('utils/getDisplayName.js', () => {
 
       const AndAnotherComponent = () => <div />;
 
+      const AnonymousForwardRefComponent = React.forwardRef((props, ref) => (
+        <div {...props} ref={ref} />
+      ));
+
+      const ForwardRefComponent = React.forwardRef(function Div(props, ref) {
+        return <div {...props} ref={ref} />;
+      });
+
+      const NamedForwardRefComponent = React.forwardRef((props, ref) => (
+        <div {...props} ref={ref} />
+      ));
+      NamedForwardRefComponent.displayName = 'Div';
+
       assert.strictEqual(getDisplayName(SomeComponent), 'SomeComponent');
       assert.strictEqual(getDisplayName(SomeOtherComponent), 'CustomDisplayName');
       assert.strictEqual(getDisplayName(YetAnotherComponent), 'YetAnotherComponent');
       assert.strictEqual(getDisplayName(AndAnotherComponent), 'AndAnotherComponent');
       assert.strictEqual(getDisplayName(() => <div />), 'Component');
       assert.strictEqual(getDisplayName('div'), 'div');
+      assert.strictEqual(getDisplayName(AnonymousForwardRefComponent), 'ForwardRef');
+      assert.strictEqual(getDisplayName(ForwardRefComponent), 'ForwardRef(Div)');
+      assert.strictEqual(getDisplayName(NamedForwardRefComponent), 'Div');
       assert.strictEqual(getDisplayName(), undefined);
+      assert.strictEqual(getDisplayName({}), undefined);
+      assert.strictEqual(getDisplayName(false), undefined);
     });
   });
 

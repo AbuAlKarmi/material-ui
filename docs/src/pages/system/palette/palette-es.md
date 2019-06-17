@@ -1,4 +1,4 @@
-# Palette
+# Paleta
 
 <p class="description">Convey meaning through color with a handful of color utility classes. Includes support for styling links with hover states, too.</p>
 
@@ -36,7 +36,7 @@
 import { palette } from '@material-ui/system';
 ```
 
-| Import name | Prop      | CSS property      | Theme key                                                        |
-|:----------- |:--------- |:----------------- |:---------------------------------------------------------------- |
-| `color`     | `color`   | `color`           | [`palette`](/customization/default-theme/?expend-path=$.palette) |
-| `bgcolor`   | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expend-path=$.palette) |
+| Nombre del import | Prop      | Propiedad CSS     | Clave del tema                                                   |
+|:----------------- |:--------- |:----------------- |:---------------------------------------------------------------- |
+| `color`           | `color`   | `color`           | [`palette`](/customization/default-theme/?expend-path=$.palette) |
+| `bgcolor`         | `bgcolor` | `backgroundColor` | [`palette`](/customization/default-theme/?expend-path=$.palette) |

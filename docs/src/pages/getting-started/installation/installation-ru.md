@@ -16,28 +16,22 @@ npm install @material-ui/core
 yarn add @material-ui/core
 ```
 
-Обратите внимание, что [react](https://www.npmjs.com/package/react) > = 16.3.0 и [react-dom](https://www.npmjs.com/package/react-dom) > = 16.3.0 являются одноранговыми зависимостями.
+Обратите внимание, что [react](https://www.npmjs.com/package/react) > = 16.8.0 и [react-dom](https://www.npmjs.com/package/react-dom) > = 16.8.0 являются одноранговыми зависимостями.
 
 ## Шрифт Roboto
 
-Material-UI был разработан на основе шрифта [Roboto](https://fonts.google.com/specimen/Roboto). Поэтому обязательно следуйте [этим инструкциям](/style/typography/#general). Например, через Google Web Fonts:
+Material-UI был разработан на основе шрифта [Roboto](https://fonts.google.com/specimen/Roboto). Поэтому обязательно следуйте [этим инструкциям](/components/typography/#general). Например, через Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-```
-
-В качестве альтернативы, если вы используете JSX поверх HTML для отрисовки head:
-
-```jsx
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
 ```
 
 ## Иконочный шрифт
 
-Для того, чтобы использовать компонент `Icon`, вы должны сначала добавить [Material icons](https://material.io/tools/icons/) шрифт. Вот [некоторые инструкции](/style/icons/#font-icons) как это сделать. Например, через Google Web Fonts:
+Для того, чтобы использовать компонент `Icon`, вы должны сначала добавить [Material icons](https://material.io/tools/icons/) шрифт. Вот [некоторые инструкции](/components/icons/#font-icons) как это сделать. Например, через Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 ```
 
 В качестве альтернативы, если вы используете JSX поверх HTML для отрисовки head:
@@ -48,21 +42,27 @@ Material-UI был разработан на основе шрифта [Roboto](
 
 ## SVG Иконки
 
-Для того, чтобы использовать предварительно собранные иконки SVG Material, например, найденные в [демонстрационных версиях](/demos/app-bar/), сначала нужно установить [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) пакет:
+Для того, чтобы использовать предварительно собранные SVG-иконки Material, такие как те, которые используются для [демонстрации](/components/icons/), сначала необходимо установить пакет [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons):
 
 ```sh
+// with npm
 npm install @material-ui/icons
+
+// with yarn
+yarn add @material-ui/icons
 ```
 
 ## CDN
 
-Вы можете начать использовать Material-UI с минимальной интерфейсной инфраструктурой, что отлично подходит для прототипирования. Мы не рекомендуем использовать этот подход в производственных условиях - клиент должен загрузить всю библиотеку, независимо от того, какие компоненты фактически используются, как это влияет на производительность и использование полосы пропускания.
+Вы можете начать использовать Material-UI с минимальной интерфейсной инфраструктурой, что отлично подходит для прототипирования.
 
-#### UMD releases
+We are providing two Universal Module Definition (**UMD**) files:
 
-Мы предоставляем два файла универсального определения модуля (UMD):
-
-- один для разработки: https://unpkg.com/@material-ui/core/umd/material-ui.development.js
-- один для производства: https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js
+- один для разработки: https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js
+- один для публикации: https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js
 
 Вы можете следовать [этому примеру CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn) для быстрого старта.
+
+⚠️ We **discourage** using this approach in **production** though - the client has to download the entire library, regardless of which components are actually used, affecting performance and bandwidth utilization.
+
+⚠️ The UMD links are using the `latest` tag to point to the latest version of the library. This pointer is **unstable**, it shifts as we release new versions. You should consider pointing to a specific version like [v3.9.3](https://unpkg.com/@material-ui/core@3.9.3/umd/material-ui.development.js).

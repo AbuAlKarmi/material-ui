@@ -1,13 +1,21 @@
-# Default Theme
+# デフォルトのテーマ
 
-<p class="description">Here's what the theme object looks like with the default values.</p>
+<p class="description">これがテーマオブジェクトでデフォルト値がどのように見えるかです。</p>
+
+## 調べる
+
+ドキュメンテーションのテーマオブジェクトを調べる。
 
 {{"demo": "pages/customization/default-theme/DefaultTheme.js", "hideEditButton": true}}
 
-The theme normalizes implementation by providing default values for palette, dark and light types, typography, breakpoints, shadows, transitions, etc.
+> ヒント：あなたのコンソールでドキュメントのテーマオブジェクトで遊ぶことができます。 すべてのドキュメントページで可変なドキュメントのテーマを公開します。 ドキュメントサイトはカスタムテーマを使用していることに注意してください。
 
-Tip: you can play with the theme object in your console too. **We expose a global `theme` variable on all the pages**.
+テーマについてもっと知りたい場合は、[`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/styles/createMuiTheme.js)又は `createMuiTheme`に関連するものをインポートして使って下さい。
 
-Please take note that the documentation site is using a custom theme. As a result, the demos you see here might disagree with the values above.
+## @material-ui/core/styles と @material-ui/styles
 
-If you want to learn more about how the theme is assembled, take a look at [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/styles/createMuiTheme.js), and the related imports which `createMuiTheme` uses.
+Material-UIスタイルはnpmパッケージの[@material-ui/styles](/styles/basics/) で提供されます。 これはReactのスタイリングソリューションです。 [isolated](https://bundlephobia.com/result?p=@material-ui/styles)はMaterial-UIのデフォルトテーマです。 To remove the need for injecting a theme in the React's context **systematically**, we are wrapping the style modules (`makeStyles`, `withStyles` and `styled`) with the default Material-UI theme:
+
+- `@material-ui/core/styles/makeStyles` wraps `@material-ui/styles/makeStyles`.
+- `@material-ui/core/styles/withStyles` wraps `@material-ui/styles/withStyles`.
+- `@material-ui/core/styles/styled` wraps `@material-ui/styles/styled`.

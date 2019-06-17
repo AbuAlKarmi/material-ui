@@ -5,9 +5,11 @@
 We host some example projects which you can find in the [GitHub repository](https://github.com/mui-org/material-ui) under the [`/examples`](https://github.com/mui-org/material-ui/tree/master/examples) folder:
 
 - [Create React App](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app)
-- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
 - [Gatsby](https://github.com/mui-org/material-ui/tree/master/examples/gatsby)
+- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
+- [Parcel](https://github.com/mui-org/material-ui/tree/master/examples/parcel)
 - [CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn)
+- [Plain server-side](https://github.com/mui-org/material-ui/tree/master/examples/ssr)
 - E mais
 
 Create React App - отличный проект для изучения React. Посмотрите на [доступные альтернативы](https://github.com/facebook/create-react-app/blob/master/README.md#popular-alternatives) чтобы увидеть, какой проект лучше всего соответствует вашим потребностям.
@@ -20,8 +22,16 @@ Create React App - отличный проект для изучения React. 
 
 Если вы хотите начать с более полного и реального примера, вы можете взглянуть на:
 
-- [Material Sense](https://github.com/alexanmtz/material-sense), который включает в себя: 
+- [Material Sense](https://github.com/alexanmtz/material-sense), which includes:
+  
   - Graph using recharts
   - React Router включен с примером навигации
   - A docker container with an Nginx server for production build
   - Created with [Create React App](https://facebook.github.io/create-react-app/)
+
+- [React + Material-UI + Firebase](https://github.com/Phoqe/react-material-ui-firebase):
+  
+  - Bootstrapped with Create React App, the same tooling works out of the box
+  - Built on top of Firebase with authentication working from the start
+  - Robust routing with React Router including error handling (404)
+  - Extensive mobile support with [react-swipeable-views](https://react-swipeable-views.com) for tabs

@@ -1,68 +1,68 @@
 # Installation
 
-<p class="description">Install Material-UI, the world's most popular React UI framework.</p>
+<p class="description">Installieren Sie Material-UI, das weltweit beliebteste React UI-Framework.</p>
 
-Material-UI is available as an [npm package](https://www.npmjs.com/package/@material-ui/core).
+Material-UI ist als [npm-Paket](https://www.npmjs.com/package/@material-ui/core) verfügbar.
 
 ## npm
 
-To install and save in your `package.json` dependencies, run:
+Um die Abhängigkeit zu ihrer `package.json` hinzuzufügen, führen Sie folgenden Befehl aus:
 
 ```sh
-// with npm
+// mit npm
 npm install @material-ui/core
 
-// with yarn
+// mit yarn
 yarn add @material-ui/core
 ```
 
-Please note that [react](https://www.npmjs.com/package/react) >= 16.3.0 and [react-dom](https://www.npmjs.com/package/react-dom) >= 16.3.0 are peer dependencies.
+Beachten Sie, dass [react](https://www.npmjs.com/package/react) >= 16.8.0 und [react-dom](https://www.npmjs.com/package/react-dom) >= 16.8.0 Abhängigkeiten in Ihrem Projekt sein müssen.
 
-## Roboto Font
+## Die Roboto Schrift
 
-Material-UI was designed with the [Roboto](https://fonts.google.com/specimen/Roboto) font in mind. So be sure to follow [these instructions](/style/typography/#general). For instance, via Google Web Fonts:
-
-```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
-```
-
-Alternatively, if you are using JSX over HTML to render the head:
-
-```jsx
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
-```
-
-## Font Icons
-
-In order to use the font `Icon` component you must first add the [Material icons](https://material.io/tools/icons/) font. Here are [some instructions](/style/icons/#font-icons) on how to do so. For instance, via Google Web Fonts:
+Material-UI wurde mit Blick auf die [Roboto](https://fonts.google.com/specimen/Roboto)-Schrift designed. Bitte folgen Sie daher [diesen Anweisungen](/components/typography/#general). Zum Beispiel über Google Web Fonts:
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" />
 ```
 
-Alternatively, if you are using JSX over HTML to render the head:
+## Schriftarten-Icons
+
+Um die Font `Symbol` Komponente zu verwenden, müssen Sie zuerst die [Material Symbole Schriftart](https://material.io/tools/icons/) hinzufügen. Hier sind einige [Anweisungen](/components/icons/#font-icons) wie das geht. Zum Beispiel über Google Web Fonts:
+
+```html
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+```
+
+Oder, falls sie JSX anstatt HTML benutzen, um den Head zu rendern:
 
 ```jsx
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 ```
 
-## SVG Icons
+## SVG Symbole
 
-In order to use prebuilt SVG Material icons, such as those found in the [component demos](/demos/app-bar/) you must first install the [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) package:
+Um vorgefertigte SVG-Materialsymbole zu verwenden, wie sie in den [Icon Demos](/components/icons/) enthalten sind, müssen Sie zuerst das [@material-ui/icons](https://www.npmjs.com/package/@material-ui/icons) Paket installieren:
 
 ```sh
+// mit npm
 npm install @material-ui/icons
+
+// mit yarn
+yarn add @material-ui/icons
 ```
 
 ## CDN
 
-You can start using Material-UI with minimal Front-end infrastructure, which is great for prototyping. We discourage using this approach in production though - the client has to download the entire library, regardless of which components are actually used, affecting performance and bandwidth utilisation.
+Sie können mit der Material-UI mit minimaler Front-End-Infrastruktur verwenden, was sich hervorragend für das Prototyping eignet.
 
-#### UMD releases
+Wir bieten zwei UMD-Dateien (**Universal Module Definition**) an:
 
-We are providing two Universal Module Definition (UMD) files:
+- eine für die Entwicklung: https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js
+- eine für die Entwicklung: https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js
 
-- one for development: https://unpkg.com/@material-ui/core/umd/material-ui.development.js
-- one for production: https://unpkg.com/@material-ui/core/umd/material-ui.production.min.js
+Sie können diesem [CDN-Beispiel](https://github.com/mui-org/material-ui/tree/master/examples/cdn) folgen um schnell anfangen zu können.
 
-You can follow [this CDN example](https://github.com/mui-org/material-ui/tree/master/examples/cdn) to quickly get started.
+⚠️ Wir **raten davon ab**, diesen Ansatz in der **Produktion** zu verwenden: Der Client muss die gesamte Bibliothek herunterladen, unabhängig davon, welche Komponenten tatsächlich verwendet werden, was die Leistung und Bandbreitennutzung beeinflusst.
+
+⚠️ Die UMD-Links verwenden den `neueste` Tag, um auf die neueste Version der Bibliothek zu verweisen. Dieser Link ist **instabil**, da er sich verändert, wenn wir neue Versionen veröffentlichen. Sie sollten in Betracht ziehen, auf eine bestimmte Version wie [v3.9.3](https://unpkg.com/@material-ui/core@3.9.3/umd/material-ui.development.js) zu verweisen.

@@ -1,14 +1,17 @@
 /* eslint-disable no-console */
 
 import { mkdir, readFileSync, writeFileSync } from 'fs';
+import { EOL } from 'os';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
-import { parse as docgenParse } from 'react-docgen';
+import { defaultHandlers, parse as docgenParse } from 'react-docgen';
+import muiDefaultPropsHandler from '../src/modules/utils/defaultPropsHandler';
 import generateMarkdown from '../src/modules/utils/generateMarkdown';
 import { findPagesMarkdown, findComponents } from '../src/modules/utils/find';
 import { getHeaders } from '../src/modules/utils/parseMarkdown';
+import parseTest from '../src/modules/utils/parseTest';
 import createMuiTheme from '../../packages/material-ui/src/styles/createMuiTheme';
-import getStylesCreator from '../../packages/material-ui/src/styles/getStylesCreator';
+import getStylesCreator from '../../packages/material-ui-styles/src/getStylesCreator';
 
 function ensureExists(pat, mask, cb) {
   mkdir(pat, mask, err => {
@@ -39,41 +42,51 @@ if (args.length < 4) {
 
 const rootDirectory = path.resolve(__dirname, '../../');
 const docsApiDirectory = path.resolve(rootDirectory, args[3]);
-const theme = createMuiTheme({ typography: { useNextVariants: true } });
+const theme = createMuiTheme();
 
 const inheritedComponentRegexp = /\/\/ @inheritedComponent (.*)/;
 
-function getInheritance(src) {
-  const inheritedComponent = src.match(inheritedComponentRegexp);
+function getInheritance(testInfo, src) {
+  let inheritedComponentName = testInfo.inheritComponent;
 
-  if (!inheritedComponent) {
+  if (inheritedComponentName == null) {
+    const match = src.match(inheritedComponentRegexp);
+    if (match !== null) {
+      inheritedComponentName = match[1];
+    }
+  }
+
+  if (inheritedComponentName == null) {
     return null;
   }
 
-  const component = inheritedComponent[1];
   let pathname;
 
-  switch (component) {
+  switch (inheritedComponentName) {
     case 'Transition':
       pathname = 'https://reactcommunity.org/react-transition-group/#Transition';
       break;
 
-    case 'EventListener':
-      pathname = 'https://github.com/oliviertassinari/react-event-listener';
-      break;
-
     default:
-      pathname = `/api/${kebabCase(component)}`;
+      pathname = `/api/${kebabCase(inheritedComponentName)}`;
       break;
   }
 
   return {
-    component,
+    component: inheritedComponentName,
     pathname,
   };
 }
 
-function buildDocs(options) {
+function getLineFeed(source) {
+  const match = source.match(/\r?\n/);
+  if (match === null) {
+    return EOL;
+  }
+  return match[0];
+}
+
+async function buildDocs(options) {
   const { component: componentObject, pagesMarkdown } = options;
   const src = readFileSync(componentObject.filename, 'utf8');
 
@@ -129,7 +142,9 @@ function buildDocs(options) {
 
   let reactAPI;
   try {
-    reactAPI = docgenParse(src);
+    reactAPI = docgenParse(src, null, defaultHandlers.concat(muiDefaultPropsHandler), {
+      filename: componentObject.filename,
+    });
   } catch (err) {
     console.log('Error parsing src for', componentObject.filename);
     throw err;
@@ -140,6 +155,12 @@ function buildDocs(options) {
   reactAPI.pagesMarkdown = pagesMarkdown;
   reactAPI.src = src;
   reactAPI.spread = spread;
+  reactAPI.EOL = getLineFeed(src);
+
+  const testInfo = await parseTest(componentObject.filename);
+  // no Object.assign to visually check for collisions
+  reactAPI.forwardsRefTo = testInfo.forwardsRefTo;
+  reactAPI.strictModeReady = testInfo.strictModeReady;
 
   // if (reactAPI.name !== 'TableCell') {
   //   return;
@@ -147,7 +168,7 @@ function buildDocs(options) {
 
   // Relative location in the file system.
   reactAPI.filename = componentObject.filename.replace(rootDirectory, '');
-  reactAPI.inheritance = getInheritance(src);
+  reactAPI.inheritance = getInheritance(testInfo, src);
 
   let markdown;
   try {
@@ -163,7 +184,10 @@ function buildDocs(options) {
       return;
     }
 
-    writeFileSync(path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.md`), markdown);
+    writeFileSync(
+      path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.md`),
+      markdown.replace(/\r?\n/g, reactAPI.EOL),
+    );
     writeFileSync(
       path.resolve(docsApiDirectory, `${kebabCase(reactAPI.name)}.js`),
       `import 'docs/src/modules/components/bootstrap';
@@ -177,7 +201,7 @@ function Page() {
 }
 
 export default Page;
-`,
+`.replace(/\r?\n/g, reactAPI.EOL),
     );
 
     console.log('Built markdown docs for', reactAPI.name);
@@ -197,7 +221,11 @@ function run() {
   const components = findComponents(path.resolve(rootDirectory, args[2]));
 
   components.forEach(component => {
-    buildDocs({ component, pagesMarkdown });
+    buildDocs({ component, pagesMarkdown }).catch(error => {
+      console.warn(`error building docs for ${component.filename}`);
+      console.error(error);
+      process.exit(1);
+    });
   });
 }
 

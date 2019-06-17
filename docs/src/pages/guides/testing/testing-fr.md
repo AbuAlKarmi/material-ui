@@ -1,6 +1,8 @@
-# Testing
+# Test
 
 <p class="description">Write tests to prevent regressions and write better code.</p>
+
+Examples in this guide use [global methods from Mocha](https://mochajs.org/api/global.html), not [Jest](https://jestjs.io/docs/en/api).
 
 ## Internal
 
@@ -36,19 +38,19 @@ The `createRender()` function is ideal for this. This is just an alias for the e
 
 Generate an enhanced shallow function with the needed context. Please refer to the [enzyme API documentation](https://airbnb.io/enzyme/docs/api/shallow.html) for further details on the `shallow` function.
 
-#### Arguments
+#### Paramètres
 
 1. `options` (*Object* [optional]) 
     - `options.shallow` (*Function* [optional]): The shallow function to enhance, it uses **enzyme by default**.
     - `options.untilSelector` (*String* [optional]): Recursively shallow renders the children until it can find the provided selector. It's useful to drill down higher-order components.
-    - `options.dive` (*Boolean* [optional]): Shallow render the one non-DOM child of the current wrapper, and return a wrapper around the result.
+    - `options.dive` (*Boolean* [optional]): Shallow function renders the one non-DOM child of the current wrapper, and returns a wrapper around the result.
     - The other keys are forwarded to the options argument of `enzyme.shallow()`.
 
-#### Returns
+#### Valeur de retour
 
 `shallow` (*shallow*): A shallow function.
 
-#### Examples
+#### Exemples
 
 ```jsx
 import { createShallow } from '@material-ui/core/test-utils';
@@ -56,7 +58,7 @@ import { createShallow } from '@material-ui/core/test-utils';
 describe('<MyComponent />', () => {
   let shallow;
 
-  before(() => {
+  before(() => {  // This is Mocha; in Jest, use beforeAll
     shallow = createShallow();
   });
 
@@ -70,17 +72,17 @@ describe('<MyComponent />', () => {
 
 Generate an enhanced mount function with the needed context. Please refer to the [enzyme API documentation](https://airbnb.io/enzyme/docs/api/mount.html) for further details on the `mount` function.
 
-#### Arguments
+#### Paramètres
 
 1. `options` (*Object* [optional]) 
     - `options.mount` (*Function* [optional]): The mount function to enhance, it uses **enzyme by default**.
     - The other keys are forwarded to the options argument of `enzyme.mount()`.
 
-#### Returns
+#### Valeur de retour
 
 `mount` (*mount*): A mount function.
 
-#### Examples
+#### Exemples
 
 ```jsx
 import { createMount } from '@material-ui/core/test-utils';
@@ -106,17 +108,17 @@ describe('<MyComponent />', () => {
 
 Generate a render to string function with the needed context. Please refer to the [enzyme API documentation](https://airbnb.io/enzyme/docs/api/render.html) for further details on the `render` function.
 
-#### Arguments
+#### Paramètres
 
 1. `options` (*Object* [optional]) 
     - `options.render` (*Function* [optional]): The render function to enhance, it uses **enzyme by default**.
     - The other keys are forwarded to the options argument of `enzyme.render()`.
 
-#### Returns
+#### Valeur de retour
 
 `render` (*Function*): A render to string function.
 
-#### Examples
+#### Exemples
 
 ```jsx
 import { createRender } from '@material-ui/core/test-utils';

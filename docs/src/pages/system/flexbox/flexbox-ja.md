@@ -2,7 +2,7 @@
 
 <p class="description">Quickly manage the layout, alignment, and sizing of grid columns, navigation, components, and more with a full suite of responsive flexbox utilities.</p>
 
-The documentation page is highly inspired by [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/). We highly encourage you to read and memorize it.
+**flexboxに不慣れ**な場合、 [CSS-Tricks flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) を読むことをおすすめします。
 
 ## Properties for the Parent
 
@@ -36,8 +36,8 @@ The documentation page is highly inspired by [A Complete Guide to Flexbox](https
 
 ```jsx
 <Box justifyContent="flex-start">…
-<Box justifyContent="center">…
 <Box justifyContent="flex-end">…
+<Box justifyContent="center">…
 ```
 
 {{"demo": "pages/system/flexbox/JustifyContent.js"}}

@@ -1,11 +1,11 @@
-import puppeteer from 'puppeteer';
-import fse from 'fs-extra';
-import http from 'http';
-import path from 'path';
-import express from 'express';
-import expect from 'expect-puppeteer';
-import { addTeardown, shutdown } from 'modules/handleKillSignals';
-import log from 'modules/log';
+const puppeteer = require('puppeteer');
+const fse = require('fs-extra');
+const http = require('http');
+const path = require('path');
+const express = require('express');
+const expect = require('expect-puppeteer');
+const { addTeardown, shutdown } = require('../../../../modules/handleKillSignals');
+const log = require('../../../../modules/log');
 
 const port = 3090;
 const host = '0.0.0.0';
@@ -55,8 +55,29 @@ async function createApp() {
 
   let index = await fse.readFile(path.join(rootPath, 'examples/cdn/index.html'), 'utf8');
   index = index.replace(
-    'https://unpkg.com/@material-ui/core/umd/material-ui.development.js',
+    'https://unpkg.com/@material-ui/core@latest/umd/material-ui.development.js',
     umdPath,
+  );
+  index = index.replace(
+    'function App() {',
+    `
+const {
+  Button,
+  Dialog,
+} = MaterialUI;
+
+function App() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <React.Fragment>
+      <Button onClick={() => setOpen(true)}>Super Secret Password</Button>
+      <Dialog open={open}>
+        1-2-3-4-5
+      </Dialog>
+    </React.Fragment>
+  );
+     `,
   );
   app.get('/', (req, res) => {
     res.send(index);
@@ -81,7 +102,9 @@ async function startBrowser() {
   const browser = await puppeteer.launch({
     args: [
       '--single-process', // Solve mono-thread issue on CircleCI
-      '--disable-web-security', // Solve weird crossorigin anonymous issue on CircleCI
+      // https://github.com/GoogleChrome/puppeteer/blob/5d6535ca0c82efe2ca50450818d5fb20aa015658/docs/troubleshooting.md#setting-up-chrome-linux-sandbox
+      '--no-sandbox', // Solve user security sandboxing issue.
+      // '--disable-web-security', // Solve weird crossorigin anonymous issue on CircleCI
     ],
   });
   const page = await browser.newPage();

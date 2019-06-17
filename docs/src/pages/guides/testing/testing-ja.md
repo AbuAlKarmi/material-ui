@@ -2,6 +2,8 @@
 
 <p class="description">Write tests to prevent regressions and write better code.</p>
 
+Examples in this guide use [global methods from Mocha](https://mochajs.org/api/global.html), not [Jest](https://jestjs.io/docs/en/api).
+
 ## Internal
 
 We take tests seriously. We have written and maintain **a wide range** of tests so we can iterate with confidence on the components, for instance, the visual regression tests provided by [Argos-CI](https://www.argos-ci.com/mui-org/material-ui) have proven to be really helpful. To learn more about our internal tests, you can have a look at the [README](https://github.com/mui-org/material-ui/blob/master/test/README.md).
@@ -41,14 +43,14 @@ Generate an enhanced shallow function with the needed context. Please refer to t
 1. `options` (*Object* [optional]) 
     - `options.shallow` (*Function* [optional]): The shallow function to enhance, it uses **enzyme by default**.
     - `options.untilSelector` (*String* [optional]): Recursively shallow renders the children until it can find the provided selector. It's useful to drill down higher-order components.
-    - `options.dive` (*Boolean* [optional]): Shallow render the one non-DOM child of the current wrapper, and return a wrapper around the result.
+    - `options.dive` (*Boolean* [optional]): Shallow function renders the one non-DOM child of the current wrapper, and returns a wrapper around the result.
     - The other keys are forwarded to the options argument of `enzyme.shallow()`.
 
 #### Returns
 
 `shallow` (*shallow*): A shallow function.
 
-#### Examples
+#### 例
 
 ```jsx
 import { createShallow } from '@material-ui/core/test-utils';
@@ -56,7 +58,7 @@ import { createShallow } from '@material-ui/core/test-utils';
 describe('<MyComponent />', () => {
   let shallow;
 
-  before(() => {
+  before(() => {  // This is Mocha; in Jest, use beforeAll
     shallow = createShallow();
   });
 
@@ -80,7 +82,7 @@ Generate an enhanced mount function with the needed context. Please refer to the
 
 `mount` (*mount*): A mount function.
 
-#### Examples
+#### 例
 
 ```jsx
 import { createMount } from '@material-ui/core/test-utils';
@@ -116,7 +118,7 @@ Generate a render to string function with the needed context. Please refer to th
 
 `render` (*Function*): A render to string function.
 
-#### Examples
+#### 例
 
 ```jsx
 import { createRender } from '@material-ui/core/test-utils';

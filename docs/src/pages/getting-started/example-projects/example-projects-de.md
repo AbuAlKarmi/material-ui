@@ -1,27 +1,37 @@
-# Example Projects
+# Beispielprojekte
 
-<p class="description">Are you looking for an example project to get started?</p>
+<p class="description">Suchen Sie ein Beispielprojekt, um anzufangen?</p>
 
-We host some example projects which you can find in the [GitHub repository](https://github.com/mui-org/material-ui) under the [`/examples`](https://github.com/mui-org/material-ui/tree/master/examples) folder:
+Wir hosten einige Beispielprojekte, die Sie im [GitHub-Repository](https://github.com/mui-org/material-ui) finden unter dem [` /examples`](https://github.com/mui-org/material-ui/tree/master/examples) Ordner:
 
 - [Create React App](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app)
-- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
 - [Gatsby](https://github.com/mui-org/material-ui/tree/master/examples/gatsby)
+- [Next.js](https://github.com/mui-org/material-ui/tree/master/examples/nextjs)
+- [Parcel](https://github.com/mui-org/material-ui/tree/master/examples/parcel)
 - [CDN](https://github.com/mui-org/material-ui/tree/master/examples/cdn)
+- [Plain server-side](https://github.com/mui-org/material-ui/tree/master/examples/ssr)
 - E mais
 
-Create React App is an awesome project for learning React. Have a look at [the alternatives available](https://github.com/facebook/create-react-app/blob/master/README.md#popular-alternatives) to see which project best fits your needs.
+Create React App ist ein großartiges Projekt zum Lernen von React. Schauen Sie sich die [verfügbaren Alternativen an](https://github.com/facebook/create-react-app/blob/master/README.md#popular-alternatives) um zu sehen, welches Projekt am besten zu Ihnen passt.
 
-The source code for this documentation site is also included in the repository. This is a slightly more complex project. Check out the [`/docs`](https://github.com/mui-org/material-ui/tree/master/docs) folder for build instructions.
+Der Quellcode für diese Dokumentationsseite ist auch im Repository enthalten. Dies ist ein etwas komplexeres Projekt. Schauen Sie sich die Build-Anweisungen im [`/docs`](https://github.com/mui-org/material-ui/tree/master/docs) Ordner an.
 
-## More advanced example projects
+## Fortgeschrittenere Beispielprojekte
 
-Looking for a more advanced example project?
+Suchen Sie nach einem fortgeschritteneren Beispielprojekt?
 
-If you want to start with a more complete and real world example, you could take a look at:
+Wenn Sie mit einem vollständigeren und realistischeren Beispiel beginnen möchten, werfen Sie einen Blick auf Folgendes:
 
-- [Material Sense](https://github.com/alexanmtz/material-sense), which includes: 
-  - Graph using recharts
-  - React Router included with a navigation example
-  - A docker container with an Nginx server for production build
-  - Created with [Create React App](https://facebook.github.io/create-react-app/)
+- [Material Sense](https://github.com/alexanmtz/material-sense), welches beeinhaltet:
+  
+  - Diagramme mit recharts
+  - React Router mit einem Navigationsbeispiel
+  - Ein Docker-Container mit einem Nginx-Server für den Produktionsaufbau
+  - Erstellt mit [Create React App](https://facebook.github.io/create-react-app/)
+
+- [React + Material-UI + Firebase](https://github.com/Phoqe/react-material-ui-firebase):
+  
+  - Mit Create React App gebootet, funktioniert das gleiche Tool sofort
+  - Aufbauend auf Firebase mit Authentifizierung von Anfang an
+  - Robustes Routing mit React Router inklusive Fehlerbehandlung (404)
+  - Umfassender mobiler Support mit [react-swipeable-views](https://react-swipeable-views.com) für Tabs

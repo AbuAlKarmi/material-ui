@@ -1,23 +1,26 @@
-# Minimizing Bundle Size
+# Minimizando o tamanho do pacote
 
-<p class="description">Learn more about the tools you can leverage to reduce the bundle size.</p>
+<p class="description">Saiba mais sobre as ferramentas que você pode aproveitar para reduzir o tamanho do pacote.</p>
 
-## Bundle size matters
+## Tamanho do pacote importa
 
-The bundle size of Material-UI is taken very seriously, so [size-limit](https://github.com/ai/size-limit) is used to prevent introducing any size regression. The size of the bundle is checked at each commit:
+O tamanho do pacote de Material-UI é levado muito a sério. Tiramos snapshots de tamanho em cada commit, para cada pacote e partes críticas desses pacotes ([veja o último snapshot](/size-snapshot)). Combinado com [dangerJS](https://danger.systems/js/) podemos inspecionar [alterações detalhadas no tamanho do pacote](https://github.com/mui-org/material-ui/pull/14638#issuecomment-466658459) em cada solicitação de Pull Request.
 
-- When importing **all the components**. This lets us spot any [unwanted bundle size increase](https://github.com/mui-org/material-ui/blob/master/.size-limit.js#L30).
-- When importing **a single component**. This lets us estimate [the overhead of our core dependencies](https://github.com/mui-org/material-ui/blob/master/.size-limit.js#L24). (styling, theming, etc.: ~18 kB gzipped)
+## Como reduzir o tamanho do pacote?
 
-## How to reduce the bundle size?
+Por conveniência, o Material-UI expõe sua API completa em nível superior na importação de `material-ui`. Se você estiver usando módulos ES 6 e um empacotador que suporte [tree-shaking](https://pt.stackoverflow.com/a/317844) ([`webpack` >= 2.x](https://webpack.js.org/guides/tree-shaking/), [`parcel` com a opção](https://en.parceljs.org/cli.html#enable-experimental-scope-hoisting/tree-shaking-support)), você pode seguramente usar importações nomeadas e ter apenas um conjunto mínimo de componentes do Material-UI em seu pacote:
 
-For convenience, Material-UI exposes its full API on the top-level `material-ui` import. Using this is fine if you have tree shaking working, however, in the case where tree shaking is not supported or configured in your build chain, **this causes the entire library and its dependencies to be included** in your client bundle.
+```js
+import { Button, TextField } from '@material-ui/core';
+```
 
-You have couple of options to overcome this situation:
+Esteja ciente que tree-shaking é uma otimização, que geralmente é aplicada somente aos pacotes de produção. Pacotes de desenvolvimento irá conter a biblioteca completa, que pode levar tempos de inicialização mais lentos. Isso é especialmente perceptível se você importar de `@material-ui/icons`. Os tempos de inicialização podem ser aproximadamente 6 vezes mais lentos do que sem utilizar importações nomeadas da API de nível superior.
 
-### Option 1
+Se isso é um problema para você, você tem várias opções:
 
-You can import directly from `material-ui/` to avoid pulling in unused modules. For instance, instead of:
+### Opção 1
+
+Você pode usar as importações de caminho para evitar a extração de módulos não utilizados. Por exemplo, em vez de:
 
 ```js
 import { Button, TextField } from '@material-ui/core';
@@ -30,28 +33,62 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 ```
 
-While importing directly in this manner doesn't use the exports in [`material-ui/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js), this file can serve as a handy reference as to which modules are public. Anything not listed there should be considered **private**, and subject to change without notice. For example, the `Tabs` component is a public module while `TabIndicator` is private.
+Ao importar diretamente dessa maneira, não utiliza as exportações em [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js), esse arquivo pode servir como uma referência útil para quais módulos são públicos.
 
-### Option 2
-
-Another option is to keep using the shortened import like the following, but still have the size of the bundle optimized thanks to a **Babel plugin**:
+Esteja ciente de que apenas damos suporte para as importações de primeiro e segundo níveis. Qualquer coisa abaixo do segundo nível, é considerada privada e pode causar duplicação de módulo no seu pacote.
 
 ```js
-import { Button, TextField } from '@material-ui/core';
+// OK
+import { Add as AddIcon } from '@material-ui/icons';
+import { Tabs } from '@material-ui/core';
+//                                 ^^^^ 1º ou nível superior
+
+// OK
+import AddIcon from '@material-ui/icons/Add';
+import Tabs from '@material-ui/core/Tabs';
+//                                  ^^^^ 2º nível
+
+// NÃO OK
+import TabIndicator from '@material-ui/core/Tabs/TabIndicator';
+//                                               ^^^^^^^^^^^^ 3º nível
 ```
 
-Pick one of the following plugins:
+### Opção 2
 
-- [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) is quite customizable and with enough tweaks works with Material-UI.
-- [babel-transform-imports](https://bitbucket.org/amctheatres/babel-transform-imports) has a different api than a `babel-plugin-import` but does same thing.
-- [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) aims to work out of the box with all the `package.json`.
+**Nota importante**: Isso é suportado apenas por `@material-ui/icons`. Recomendamos essa abordagem se você frequentemente reiniciar sua compilação de desenvolvimento.
 
-**Important note**: Both of these options *should be temporary* until you add tree shaking capabilities to your project.
+Outra opção é continuar usando importações nomeadas, podemos então melhorar o tempo de inicialização usando plugins `babel`.
+
+Escolha um dos seguintes plugins:
+
+- [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) com a seguinte configuração: 
+        js
+        [
+        'babel-plugin-import',
+        {
+          libraryName: '@material-ui/icons',
+          libraryDirectory: 'esm', // ou '' se o seu empacotador não suportar módulos ES
+          camel2DashComponentName: false,
+        },
+        ];
+
+- [babel-plugin-transform-imports](https://www.npmjs.com/package/babel-plugin-transform-import) tem uma api diferente de `babel-plugin-import`, mas faz a mesma coisa. 
+        js
+        [
+        'transform-imports',
+        {
+          '@material-ui/icons': {
+            transform: '@material-ui/icons/esm/${member}',
+            // para empacotador que não suporta módulos ES:
+            // transform: '@material-ui/icons/${member}',
+          },
+        },
+        ];
 
 ## ECMAScript
 
-The package published on npm is **transpiled**, with [Babel](https://github.com/babel/babel), to take into account the [supported platforms](/getting-started/supported-platforms/).
+O pacote publicado no npm é **transpilado**, com [Babel](https://github.com/babel/babel), para levar em consideração as [plataformas suportadas](/getting-started/supported-platforms/).
 
-We also publish a second version of the components to target **evergreen browsers**. You can find this version under the [`/es` folder](https://unpkg.com/@material-ui/core/es/). All the non-official syntax is transpiled to the [ECMA-262 standard](https://www.ecma-international.org/publications/standards/Ecma-262.htm), nothing more. This can be used to make separate bundles targeting different browsers. Older browsers will require more JavaScript features to be transpiled, which increases the size of the bundle. No polyfills are included for ES2015 runtime features. IE11+ and evergreen browsers support all the necessary features. If you need support for other browsers, consider using [`@babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill).
+Também publicamos uma segunda versão dos componentes. Você pode encontrar esta versão sob a [pasta `/es`](https://unpkg.com/@material-ui/core@next/es/). Toda a sintaxe não oficial é transpilada para o padrão [ECMA-262](https://www.ecma-international.org/publications/standards/Ecma-262.htm), nada mais. Isso pode ser usado para criar pacotes separados visando diferentes navegadores. Os navegadores mais antigos exigem mais recursos JavaScript para serem transpilados, o que aumenta o tamanho do pacote. Nenhum polyfill está incluído para os recursos de tempo de execução do ES2015. IE11+ e navegadores evergreen suportam todos os recursos necessários. Se você precisar de suporte para outros navegadores, considere usar [`@babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill).
 
-⚠️ In order to minimize duplication of code in users' bundles, we **strongly discourage** library authors from using the `/es` folder.
+⚠️ Para minimizar a duplicação de código nos pacotes dos usuários, nós **desencorajamos fortemente** autores de bibliotecas de usar a pasta `/es`.

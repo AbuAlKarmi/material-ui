@@ -1,18 +1,18 @@
 # TypeScript
 
-<p class="description">You can add static typing to JavaScript to improve developer productivity and code quality thanks to TypeScript.</p>
+<p class="description">Você pode adicionar tipagem estática para o JavaScript para melhorar a produtividade do desenvolvimento e a qualidade do código graças ao TypeScript.</p>
 
-Have a look at the [Create React App with TypeScript](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app-with-typescript) example. A minimum version of TypeScript 2.8 is required.
+Dê uma olhada no exemplo [Create React App com TypeScript](https://github.com/mui-org/material-ui/tree/master/examples/create-react-app-with-typescript). É necessário estar no mínimo com a versão 2.8 do TypeScript.
 
-Our definitions are tested with the following [tsconfig.json](https://github.com/mui-org/material-ui/tree/master/tsconfig.json). Using a less strict `tsconfig.json` or omitting some of the libraries might cause errors.
+Nossas definições são testadas com a seguinte configuração [tsconfig.json](https://github.com/mui-org/material-ui/tree/master/tsconfig.json). Usando uma `tsconfig.json` menos rigorosa ou omitindo algumas das bibliotecas podem causar erros.
 
-## Usage of `withStyles`
+## Uso de `withStyles`
 
-Using `withStyles` in TypeScript can be a little tricky, but there are some utilities to make the experience as painless as possible.
+Utilizando `withStyles` no TypeScript pode ser um pouco complicado, mas há alguns utilitários que tornam a experiência menos dolorosa possível.
 
-### Using `createStyles` to defeat type widening
+### Utilizando `createStyles` para evitar a ampliação de tipo (type widening)
 
-A frequent source of confusion is TypeScript's [type widening](https://blog.mariusschulz.com/2017/02/04/typescript-2-1-literal-type-widening), which causes this example not to work as expected:
+Uma fonte frequente de confusão é a ampliação de tipos ([type widening](https://mariusschulz.com/blog/typescript-2-1-literal-type-widening)) do TypeScript, que faz com que este exemplo não funcione como o esperado:
 
 ```ts
 const styles = {
@@ -25,10 +25,10 @@ const styles = {
 withStyles(styles);
 //         ^^^^^^
 //         Os tipos de propriedade 'flexDirection' são incompatíveis.
-//           Type 'string' is not assignable to type '"-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "column" | "column-reverse" | "row"...'.
+//           Tipo 'string' não pode ser atribuído para o tipo '"-moz-initial" | "inherit" | "initial" | "revert" | "unset" | "column" | "column-reverse" | "row"...'.
 ```
 
-The problem is that the type of the `flexDirection` property is inferred as `string`, which is too arbitrary. To fix this, you can pass the styles object directly to `withStyles`:
+O problema é que o tipo da propriedade `flexDirection` é convertido como `string`, no qual é o tipo mais conveniente. Para corrigir isto, você pode passar o objeto de estilos diretamente para `withStyles`:
 
 ```ts
 withStyles({
@@ -39,7 +39,7 @@ withStyles({
 });
 ```
 
-However type widening rears its ugly head once more if you try to make the styles depend on the theme:
+No entanto, a ampliação de tipos continuará a causar dores de cabeça se você tentar fazer com que os estilos dependam do tema:
 
 ```ts
 withStyles(({ palette, spacing }) => ({
@@ -53,12 +53,12 @@ withStyles(({ palette, spacing }) => ({
 }));
 ```
 
-This is because TypeScript [widens the return types of function expressions](https://github.com/Microsoft/TypeScript/issues/241).
+Isso ocorre pois o TypeScript [amplia o retorno de tipos de expressões de função](https://github.com/Microsoft/TypeScript/issues/241).
 
-Because of this, we recommend using our `createStyles` helper function to construct your style rules object:
+Por causa disto, nós recomendamos utilizar nossa função auxiliar `createStyles` para construir seu objeto de regras de estilo:
 
 ```ts
-// Non-dependent styles
+// Estilos sem dependência
 const styles = createStyles({
   root: {
     display: 'flex',
@@ -66,7 +66,7 @@ const styles = createStyles({
   },
 });
 
-// Theme-dependent styles
+// Estilos com dependência do tema
 const styles = ({ palette, spacing }: Theme) => createStyles({
   root: {
     display: 'flex',
@@ -78,11 +78,11 @@ const styles = ({ palette, spacing }: Theme) => createStyles({
 });
 ```
 
-`createStyles` is just the identity function; it doesn't "do anything" at runtime, just helps guide type inference at compile time.
+`createStyles` é apenas a identidade da função; ela não "faz nada" em tempo de execução, apenas auxilia a inferência de tipos em tempo de compilação.
 
-### Media queries
+### Consultas de Mídia (Media queries)
 
-`withStyles` allows a styles object with top level media-queries like so:
+`withStyles` permite utilizar um objeto de estilos de nível superior com consultas de mídia assim:
 
 ```ts
 const styles = createStyles({
@@ -97,11 +97,11 @@ const styles = createStyles({
 });
 ```
 
-However to allow these styles to pass TypeScript the definitions have to be ambiguous concerning names for CSS classes and actual CSS property names. Due to this class names that are equal to CSS properties should be avoided.
+No entanto, para permitir que estes estilos passem pelo TypeScript, as definições devem ser ambíguas em relação aos nomes de classes CSS e nomes de propriedades CSS. Devido a isso, evite utilizar nomes de classes iguais a propriedades do CSS.
 
 ```ts
-// erro porque o TypeScript acha que `@media (min-width: 960px)``é um nome de classe 
-// e` content` é a propriedade cs
+// erro porque TypeScript acha que `@media (min-width: 960px)` é o nome da classe
+// e `content` é a propriedade css
 const ambiguousStyles = createStyles({
   content: {
     minHeight: '100vh',
@@ -113,7 +113,7 @@ const ambiguousStyles = createStyles({
   },
 });
 
-// funciona bem
+// funciona corretamente
 const ambiguousStyles = createStyles({
   contentClass: {
     minHeight: '100vh',
@@ -126,9 +126,9 @@ const ambiguousStyles = createStyles({
 });
 ```
 
-### Augmenting your props using `WithStyles`
+### Incrementando suas propriedades utilizando `WithStyles`
 
-Since a component decorated with `withStyles(styles)` gets a special `classes` prop injected, you will want to define its props accordingly:
+Desde que um componente seja decorado com `withStyles(styles)`, ele recebe uma propriedade injetada `classes`, você pode querer definir estas propriedades de acordo com:
 
 ```ts
 const styles = (theme: Theme) => createStyles({
@@ -150,7 +150,7 @@ interface Props {
 }
 ```
 
-However this isn't very [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) because it requires you to maintain the class names (`'root'`, `'paper'`, `'button'`, ...) in two different places. We provide a type operator `WithStyles` to help with this, so that you can just write
+No entanto isto não é muito elegante de acordo com o princípio de software [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), porque requer que você mantenha os nomes das classes (`'root'`, `'paper'`, `'button'`, ...) em dois locais diferentes. Nós fornecemos um operador de tipo `WithStyles` para ajudar com isso, assim você pode apenas escrever:
 
 ```ts
 import { WithStyles, createStyles } from '@material-ui/core';
@@ -167,9 +167,9 @@ interface Props extends WithStyles<typeof styles> {
 }
 ```
 
-### Decorating components
+### Decorando componentes
 
-Applying `withStyles(styles)` as a function works as expected:
+Aplicando `withStyles(styles)` como uma função, nos dá o resultado como o esperado:
 
 ```tsx
 const DecoratedSFC = withStyles(styles)(({ text, type, color, classes }: Props) => (
@@ -192,13 +192,13 @@ const DecoratedClass = withStyles(styles)(
 );
 ```
 
-Unfortunately due to a [current limitation of TypeScript decorators](https://github.com/Microsoft/TypeScript/issues/4881), `withStyles(styles)` can't be used as a decorator in TypeScript.
+Infelizmente devido a uma [limitação atual dos decoradores do TypeScript](https://github.com/Microsoft/TypeScript/issues/4881), `withStyles(styles)` não pode ser usado como decorador no TypeScript.
 
-## Customization of `Theme`
+## Customização de tema
 
-When adding custom properties to the `Theme`, you may continue to use it in a strongly typed way by exploiting [Typescript's module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation).
+Ao adicionar propriedades customizadas ao `Theme`, você pode continuar a utilizá-lo de uma maneira fortemente tipada, explorando o conceito de extensão de módulos do TypeScript ([TypeScript's module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation)).
 
-The following example adds an `appDrawer` property that is merged into the one exported by `material-ui`:
+O exemplo a seguir adiciona uma propriedade `appDrawer` que é mesclada na que foi exportada pelo `material-ui`:
 
 ```ts
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -211,7 +211,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
       breakpoint: Breakpoint
     }
   }
-  // allow configuration using `createMuiTheme`
+  // permitir configuração usando `createMuiTheme`
   interface ThemeOptions {
     appDrawer?: {
       width?: React.CSSProperties['width']
@@ -221,7 +221,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 ```
 
-And a custom theme factory with additional defaulted options:
+E uma fábrica customizada de temas com opções padrão adicionais:
 
 **./styles/createMyTheme**:
 
@@ -239,7 +239,7 @@ export default function createMyTheme(options: ThemeOptions) {
 }
 ```
 
-This could be used like:
+Isso poderia ser usado como:
 
 ```ts
 import createMyTheme from './styles/createMyTheme';
@@ -247,63 +247,8 @@ import createMyTheme from './styles/createMyTheme';
 const theme = createMyTheme({ appDrawer: { breakpoint: 'md' }});
 ```
 
-## Usage of `component` property
+## Uso da propriedade `component`
 
-Material-UI allows you to replace a component's root node via a `component` property. For example, a `Button`'s root node can be replaced with a React Router `Link`, and any additional props that are passed to `Button`, such as `to`, will be spread to the `Link` component, meaning you can do this:
+Material-UI permite que você substitua o nó raiz de um componente através de uma propriedade `component`. Por exemplo, a raiz de um componente `Button` pode ser substituída com um React Router `Link`, e quaisquer propriedades adicionais passadas para o `Button`, como `to`, será repassada para o componente `Link`. Para um exemplo de código relativo ao `Button` e `react-router-dom` verifique [esta demonstração](/components/buttons/#third-party-routing-library).
 
-```jsx
-import { Link } from 'react-router-dom';
-
-<Button component={Link} to="/">Go Home</Button>
-```
-
-However, TypeScript will complain about it, because `to` is not part of the `ButtonProps` interface, and with the current type declarations it has no way of inferring what props can be passed to `component`.
-
-The current workaround is to cast Link to `any`:
-
-```tsx
-import { Link } from 'react-router-dom';
-import Button, { ButtonProps } from '@material-ui/core/Button';
-
-interface LinkButtonProps extends ButtonProps {
-  to: string;
-  replace?: boolean;
-}
-
-const LinkButton = (props: LinkButtonProps) => (
-  <Button {...props} component={Link as any} />
-)
-
-// usage:
-<LinkButton color="primary" to="/">Go Home</LinkButton>
-```
-
-Material-UI components pass some basic event handler props (`onClick`, `onDoubleClick`, etc.) to their root nodes. These handlers have a signature of:
-
-```ts
-(event: MouseEvent<HTMLElement, MouseEvent>) => void
-```
-
-which is incompatible with the event handler signatures that `Link` expects, which are:
-
-```ts
-(event: MouseEvent<AnchorElement>) => void
-```
-
-Any element or component that you pass into `component` will have this problem if the signatures of their event handler props don't match.
-
-There is an ongoing effort to fix this by making component props generic.
-
-### Avoiding properties collision
-
-The previous strategy suffers from a little limitation: properties collision. The component providing the `component` property might not forward all its properties to the root element. To workaround this issue, you can create a custom component:
-
-```tsx
-import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
-
-const MyLink = (props: any) => <Link to="/" {...props} />;
-
-// usage:
-<Button color="primary" component={MyLink}>Go Home</Button>
-```
+Nem todos os componentes suportam totalmente qualquer tipo de componente que você passe. Se você encontrar algum componente que rejeita sua propriedade `component` no TypeScript por favor abra um issue. Há um esforço contínuo para corrigir isso fazendo com que a propriedade component seja genérica.

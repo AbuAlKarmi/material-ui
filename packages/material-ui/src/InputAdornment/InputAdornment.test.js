@@ -1,6 +1,7 @@
 import React from 'react';
 import { assert } from 'chai';
 import { createMount, getClasses, findOutermostIntrinsic } from '@material-ui/core/test-utils';
+import describeConformance from '../test-utils/describeConformance';
 import consoleErrorMock from 'test/utils/consoleErrorMock';
 import Typography from '../Typography';
 import InputAdornment from './InputAdornment';
@@ -13,7 +14,7 @@ describe('<InputAdornment />', () => {
   let classes;
 
   before(() => {
-    mount = createMount();
+    mount = createMount({ strict: true });
     classes = getClasses(<InputAdornment position="start">foo</InputAdornment>);
   });
 
@@ -21,21 +22,13 @@ describe('<InputAdornment />', () => {
     mount.cleanUp();
   });
 
-  it('should render a div', () => {
-    const wrapper = mount(<InputAdornment position="start">foo</InputAdornment>);
-    const adornment = findOutermostIntrinsic(wrapper);
-    assert.strictEqual(adornment.name(), 'div');
-  });
-
-  it('should render given component', () => {
-    const wrapper = mount(
-      <InputAdornment component="span" position="start">
-        foo
-      </InputAdornment>,
-    );
-    const adornment = findOutermostIntrinsic(wrapper);
-    assert.strictEqual(adornment.name(), 'span');
-  });
+  describeConformance(<InputAdornment position="start">foo</InputAdornment>, () => ({
+    classes,
+    inheritComponent: 'div',
+    mount,
+    refInstanceof: window.HTMLDivElement,
+    testComponentPropWith: 'span',
+  }));
 
   it('should wrap text children in a Typography', () => {
     const wrapper = mount(<InputAdornment position="start">foo</InputAdornment>);

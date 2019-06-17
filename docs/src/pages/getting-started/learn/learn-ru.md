@@ -1,12 +1,12 @@
-# Learn Material-UI
+# Изучить Material-UI
 
-<p class="description">New to Material-UI? It's easy to learn if you know where to start! This guide will help you to get started quickly.</p>
+<p class="description">Новичок в Material-UI? Легко начать изучение если ты знаешь с чего начать! Это руководство поможет вам быстро начать работу.</p>
 
-People come to Material-UI from different backgrounds and with different learning styles. Whether you prefer a more theoretical or a practical approach, we hope you’ll find this section helpful. Like any unfamiliar technology, Material-UI does have a learning curve. With practice and some patience, you will soon get the hang of it.
+Люди, которые знакомятся с Material-UI, имеют разный опыт и подходы к изучению. В независимости от того какой подход вы предпочитаете: более теоретический или практический, мы надеемся, что вы найдете этот раздел полезным. Как и любая незнакомая технология, Material-UI имеет кривую обучения. Немного терепения и практики и вы скоро освоитесь.
 
-## First Example
+## Первый пример
 
-The [usage page](/getting-started/usage/#quick-start) contains a small Material-UI example with a live editor. Even if you don’t know anything about Material-UI yet, try changing the code and see how it affects the result.
+[Следующая](/getting-started/usage/#quick-start) страница содержит небольшой пример использования Material-UI в интерактивном редакторе. Даже если вы еще ничего не знаете о Material-UI, попробуйте изменить код и посмотреть, как ваши правки повлияют на результат.
 
 ## Примеры проектов
 
@@ -16,20 +16,25 @@ We [host some example projects](/getting-started/example-projects/) providing th
 
 We have a [selection of basic page layouts](/getting-started/page-layout-examples/) to help you get started building your app.
 
-## Recommended resources
+## Рекомендуемые ресурсы
 
-When first learning Material-UI, you might find third-party blog posts, books and video courses more helpful than the official documentation. We maintain a list of commonly recommended resources, some of which are free.
+Впервые изучая Material-UI, вы можете найти публикации в блогах, книги и видео курсы более полезными, чем официальная документация. We maintain a list of commonly recommended resources, some of which are free.
 
-### Gratuit
+### Free
 
 - **Meet Material-UI — your new favorite user interface library**: a blog post that guides you in building a Todo MVC while covering some important concepts of Material-UI. 
- - 📝 [The blog post](https://medium.freecodecamp.org/meet-your-material-ui-your-new-favorite-user-interface-library-6349a1c88a8c)
-- **Learn React & Material-UI**: a series of videos covering all the important Material-UI components. - 📹 [The videos](https://www.youtube.com/watch?v=xm4LX5fJKZ8&list=PLcCp4mjO-z98WAu4sd0eVha1g-NMfzHZk)
-- **Getting Started With Material-UI For React**: a blog post that guides you in building a simple card list. - 📝 [The blog post](https://medium.com/codingthesmartway-com-blog/getting-started-with-material-ui-for-react-material-design-for-react-364b2688b555) - 📹 [The video](https://www.youtube.com/watch?v=PWadEeOuv5o)
+  - 📝 [Сообщение в блоге](https://medium.freecodecamp.org/meet-your-material-ui-your-new-favorite-user-interface-library-6349a1c88a8c)
+- **Изучить React & Material-UI**: серия видеороликов, охватывающих все важные компоненты Material-UI. 
+  - 📹 [Видео](https://www.youtube.com/watch?v=xm4LX5fJKZ8&list=PLcCp4mjO-z98WAu4sd0eVha1g-NMfzHZk)
+- **Начало работы с Material-UI для React**: сообщение в блоге, которое поможет вам в создании простого списка карточек. 
+  - 📝 [Сообщение в блоге](https://medium.com/codingthesmartway-com-blog/getting-started-with-material-ui-for-react-material-design-for-react-364b2688b555)
+  - 📹 [Видео](https://www.youtube.com/watch?v=PWadEeOuv5o)
 - **Elegant UX in React with Material-UI**: a blog post covering some important Material-UI concepts. 
- - 📝 [The blog post](https://alligator.io/react/material-ui/)
+  - 📝 [The blog post](https://alligator.io/react/material-ui/)
 
 ### Paid
 
+- **React Material-UI Cookbook**: Build modern day application by implementing Material Design principles in React applications using Material-UI. 
+  - 📘 [The book](https://www.packtpub.com/application-development/react-material-ui-cookbook)
 - **Builder Book**: Learn how to build a full-stack JavaScript web application from scratch, using a Modern JavaScript stack and Material-UI. 
- - 📘 [The book](https://builderbook.org/book)
+  - 📘 [The book](https://builderbook.org/book)

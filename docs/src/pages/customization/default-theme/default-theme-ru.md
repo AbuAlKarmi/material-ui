@@ -1,13 +1,21 @@
-# Default Theme
+# Тема по умолчанию
 
-<p class="description">Here's what the theme object looks like with the default values.</p>
+<p class="description">Вот как выглядит объект темы со значениями по умолчанию.</p>
+
+## Обзор
+
+Изучите документацию по объекту темы:
 
 {{"demo": "pages/customization/default-theme/DefaultTheme.js", "hideEditButton": true}}
 
-The theme normalizes implementation by providing default values for palette, dark and light types, typography, breakpoints, shadows, transitions, etc.
+> Совет: вы можете поиграть с объектом темы документации в ** вашей консоли **. Мы выставляем переменную документации `тема` на всех страницах документации. Обратите внимание, что эта документация использует настраиваемую тему.
 
-Tip: you can play with the theme object in your console too. **We expose a global `theme` variable on all the pages**.
+Подробности о структуре темы изнутри можно посмотреть здесь [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/styles/createMuiTheme.js), а также изучив зависимости, используемые `createMuiTheme`.
 
-Please take note that the documentation site is using a custom theme. As a result, the demos you see here might disagree with the values above.
+## Отличие @material-ui/core/styles от @material-ui/styles
 
-If you want to learn more about how the theme is assembled, take a look at [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/styles/createMuiTheme.js), and the related imports which `createMuiTheme` uses.
+Стили в Material-UI работают на основе npm пакета [@material-ui/styles](/styles/basics/). Это стили для React-приложения. Они [изолированы](https://bundlephobia.com/result?p=@material-ui/styles) от стандартной Material-UI темы. Чтобы избавится он необходимости **систематически** внедрять тему в контекст, мы прячем модули стилей (`makeStyles`, `withStyles` and `styled`) внутри стандартной темы Material-UI:
+
+- `@material-ui/core/styles/makeStyles` содержит `@material-ui/styles/makeStyles`.
+- `@material-ui/core/styles/withStyles` содержит `@material-ui/styles/withStyles`.
+- `@material-ui/core/styles/styled` содержит `@material-ui/styles/styled`.

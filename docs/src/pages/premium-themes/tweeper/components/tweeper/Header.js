@@ -10,9 +10,9 @@ const { AppBar, Avatar, Badge, Icon, Toolbar } = atoms;
 const { Tabs, Tab, ListItem, InputAdornment } = molecules;
 
 const Header = () => (
-  <AppBar position="sticky" elevation={1}>
+  <AppBar position="sticky">
     <Toolbar>
-      <Grid container alignItems="center" spacing={16}>
+      <Grid container alignItems="center" spacing={2}>
         <Grid item xs={6} sm={4}>
           <Tabs value={0} variant="fullWidth">
             <Tab
@@ -53,7 +53,10 @@ const Header = () => (
         </Hidden>
         <Grid item xs={6} sm="auto">
           <ListItem>
-            <Avatar src="https://pbs.twimg.com/profile_images/1060539954361622533/-9ofKMvA_bigger.jpg" />
+            <Avatar
+              alt="My profile"
+              src="https://pbs.twimg.com/profile_images/1060539954361622533/-9ofKMvA_bigger.jpg"
+            />
             <ListItemText primary="siriwatknp" />
           </ListItem>
         </Grid>

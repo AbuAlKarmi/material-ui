@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
@@ -19,14 +18,14 @@ const styles = theme => ({
     minWidth: 200,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 4,
-    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing(4),
+    marginTop: theme.spacing(4),
     [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing.unit * 10,
+      marginTop: theme.spacing(10),
     },
   },
   more: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -48,9 +47,8 @@ function ProductHero(props) {
         variant="contained"
         size="large"
         className={classes.button}
-        component={linkProps => (
-          <Link {...linkProps} href="/premium-themes/onepirate/sign-up" variant="button" />
-        )}
+        component="a"
+        href="/premium-themes/onepirate/sign-up/"
       >
         Register
       </Button>

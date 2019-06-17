@@ -3,10 +3,10 @@ import { StandardProps, PropTypes } from '..';
 
 export interface BadgeProps
   extends StandardProps<React.HTMLAttributes<HTMLDivElement>, BadgeClassKey> {
-  children: React.ReactNode;
   badgeContent?: React.ReactNode;
+  children: React.ReactNode;
   color?: PropTypes.Color | 'error';
-  component?: React.ReactType<BadgeProps>;
+  component?: React.ElementType<React.HTMLAttributes<HTMLDivElement>>;
   invisible?: boolean;
   max?: number;
   showZero?: boolean;
@@ -18,6 +18,7 @@ export type BadgeClassKey =
   | 'badge'
   | 'colorPrimary'
   | 'colorSecondary'
+  | 'colorError'
   | 'invisible'
   | 'dot';
 

@@ -1,10 +1,10 @@
 # Flexbox
 
-<p class="description">Quickly manage the layout, alignment, and sizing of grid columns, navigation, components, and more with a full suite of responsive flexbox utilities.</p>
+<p class="description">Gerencie rapidamente o leiaute, o alinhamento e o dimensionamento de colunas de grade, navegação, componentes e muito mais com um conjunto completo de utilitários flexbox responsivos.</p>
 
-The documentation page is highly inspired by [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/). We highly encourage you to read and memorize it.
+Se você é **novo ou não está familiarizado com o flexbox**, nós recomendamos você a ler este [guia do Flexbox CSS-Tricks](https://css-tricks.com/snippets/css/a-guide-to-flexbox/).
 
-## Properties for the Parent
+## Propriedades para o pai
 
 ### display
 
@@ -36,8 +36,8 @@ The documentation page is highly inspired by [A Complete Guide to Flexbox](https
 
 ```jsx
 <Box justifyContent="flex-start">…
-<Box justifyContent="center">…
 <Box justifyContent="flex-end">…
+<Box justifyContent="center">…
 ```
 
 {{"demo": "pages/system/flexbox/JustifyContent.js"}}
@@ -61,7 +61,7 @@ The documentation page is highly inspired by [A Complete Guide to Flexbox](https
 
 {{"demo": "pages/system/flexbox/AlignContent.js"}}
 
-## Properties for the Children
+## Propriedades para os Filhos
 
 ### order
 
@@ -109,15 +109,15 @@ The documentation page is highly inspired by [A Complete Guide to Flexbox](https
 import { flexbox } from '@material-ui/system';
 ```
 
-| Import name      | Prop             | CSS property      | Theme key |
-|:---------------- |:---------------- |:----------------- |:--------- |
-| `flexDirection`  | `flexDirection`  | `flex-direction`  | none      |
-| `flexWrap`       | `flexWrap`       | `flex-wrap`       | none      |
-| `justifyContent` | `justifyContent` | `justify-content` | none      |
-| `alignItems`     | `alignItems`     | `align-items`     | none      |
-| `alignContent`   | `alignContent`   | `align-content`   | none      |
-| `order`          | `order`          | `order`           | none      |
-| `flex`           | `flex`           | `flex`            | none      |
-| `flexGrow`       | `flexGrow`       | `flex-grow`       | none      |
-| `flexShrink`     | `flexShrink`     | `flex-shrink`     | none      |
-| `alignSelf`      | `alignSelf`      | `align-self`      | none      |
+| Nome da importação | Propriedade      | Propriedade CSS   | Chave do tema |
+|:------------------ |:---------------- |:----------------- |:------------- |
+| `flexDirection`    | `flexDirection`  | `flex-direction`  | none          |
+| `flexWrap`         | `flexWrap`       | `flex-wrap`       | none          |
+| `justifyContent`   | `justifyContent` | `justify-content` | none          |
+| `alignItems`       | `alignItems`     | `align-items`     | none          |
+| `alignContent`     | `alignContent`   | `align-content`   | none          |
+| `order`            | `order`          | `order`           | none          |
+| `flex`             | `flex`           | `flex`            | none          |
+| `flexGrow`         | `flexGrow`       | `flex-grow`       | none          |
+| `flexShrink`       | `flexShrink`     | `flex-shrink`     | none          |
+| `alignSelf`        | `alignSelf`      | `align-self`      | none          |

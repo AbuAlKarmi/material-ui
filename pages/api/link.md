@@ -18,16 +18,17 @@ import Link from '@material-ui/core/Link';
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">block</span> | <span class="prop-type">bool</span> | <span class="prop-default">false</span> | Controls whether the link is inline or not. When `block` is true the link is not inline  when `block` is false it is. |
-| <span class="prop-name required">children *</span> | <span class="prop-type">node</span> |   | The content of the link. |
-| <span class="prop-name">classes</span> | <span class="prop-type">object</span> |   | Override or extend the styles applied to the component. See [CSS API](#css-api) below for more details. |
-| <span class="prop-name">color</span> | <span class="prop-type">enum:&nbsp;'error', 'inherit', 'primary', 'secondary', 'textPrimary', 'textSecondary'<br></span> | <span class="prop-default">'primary'</span> | The color of the link. |
-| <span class="prop-name">component</span> | <span class="prop-type">Component</span> | <span class="prop-default">'a'</span> | The component used for the root node. Either a string to use a DOM element or a component. |
-| <span class="prop-name">TypographyClasses</span> | <span class="prop-type">object</span> |   | `classes` property applied to the [`Typography`](/api/typography/) element. |
+| <span class="prop-name required">children&nbsp;*</span> | <span class="prop-type">node</span> |  | The content of the link. |
+| <span class="prop-name">classes</span> | <span class="prop-type">object</span> |  | Override or extend the styles applied to the component. See [CSS API](#css) below for more details. |
+| <span class="prop-name">color</span> | <span class="prop-type">enum:&nbsp;'default', 'error', 'inherit', 'primary', 'secondary', 'textPrimary', 'textSecondary'<br></span> | <span class="prop-default">'primary'</span> | The color of the link. |
+| <span class="prop-name">component</span> | <span class="prop-type">elementType</span> | <span class="prop-default">'a'</span> | The component used for the root node. Either a string to use a DOM element or a component. |
+| <span class="prop-name">TypographyClasses</span> | <span class="prop-type">object</span> |  | `classes` property applied to the [`Typography`](/api/typography/) element. |
 | <span class="prop-name">underline</span> | <span class="prop-type">enum:&nbsp;'none'&nbsp;&#124;<br>&nbsp;'hover'&nbsp;&#124;<br>&nbsp;'always'<br></span> | <span class="prop-default">'hover'</span> | Controls when the link should have an underline. |
 | <span class="prop-name">variant</span> | <span class="prop-type">string</span> | <span class="prop-default">'inherit'</span> | Applies the theme typography styles. |
 
-Any other properties supplied will be spread to the root element ([Typography](/api/typography/)).
+The `ref` is forwarded to the root element.
+
+Any other properties supplied will be provided to the root element ([Typography](/api/typography/)).
 
 ## CSS
 
@@ -42,8 +43,9 @@ This property accepts the following keys:
 | <span class="prop-name">underlineHover</span> | Styles applied to the root element if `underline="hover"`.
 | <span class="prop-name">underlineAlways</span> | Styles applied to the root element if `underline="always"`.
 | <span class="prop-name">button</span> | Styles applied to the root element if `component="button"`.
+| <span class="prop-name">focusVisible</span> | Pseudo-class applied to the root element if the link is keyboard focused.
 
-Have a look at [overriding with classes](/customization/overrides/#overriding-with-classes) section
+Have a look at the [overriding styles with classes](/customization/components/#overriding-styles-with-classes) section
 and the [implementation of the component](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/Link/Link.js)
 for more detail.
 
@@ -55,7 +57,12 @@ you need to use the following style sheet name: `MuiLink`.
 The properties of the [Typography](/api/typography/) component are also available.
 You can take advantage of this behavior to [target nested components](/guides/api/#spread).
 
+## Notes
+
+The component is fully [StrictMode](https://reactjs.org/docs/strict-mode.html) compatible.
+
 ## Demos
 
-- [Links](/style/links/)
+- [Breadcrumbs](/components/breadcrumbs/)
+- [Links](/components/links/)
 

@@ -17,31 +17,6 @@ ReactDOM.render(<Demo />, document.querySelector('#root'));
   };
 }
 
-function hooksDemo(demoData) {
-  return {
-    dependencies: getDependencies(demoData.raw, { reactVersion: 'next' }),
-    files: {
-      'index.js': `
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Demo from './demo';
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
-
-const theme = createMuiTheme({ typography: { useNextVariants: true } });
-
-ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Demo />
-  </ThemeProvider>,
-  document.querySelector("#root")
-);
-      `,
-      'demo.js': demoData.raw,
-    },
-  };
-}
-
 function tsDemo(demoData) {
   return {
     dependencies: getDependencies(demoData.raw, { codeLanguage: CODE_VARIANTS.TS }),
@@ -56,14 +31,28 @@ ReactDOM.render(<Demo />, document.querySelector('#root'));
     `,
       'tsconfig.json': `{
   "compilerOptions": {
-    "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
-    "sourceMap": true,
-    "jsx": "react",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "esModuleInterop": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "src"
+  ]
 }
       `,
     },
@@ -78,8 +67,6 @@ function getLanguageConfig(demoData) {
   switch (demoData.codeVariant) {
     case CODE_VARIANTS.TS:
       return tsDemo(demoData);
-    case CODE_VARIANTS.HOOK:
-      return hooksDemo(demoData);
     case CODE_VARIANTS.JS:
       return jsDemo(demoData);
     default:
@@ -94,7 +81,9 @@ export default function getDemo(demoData) {
     files: {
       'index.html': `
 <body>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+  <!-- Fonts to support Material Design -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+  <!-- Icons to support Material Design -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <div id="root"></div>
 </body>

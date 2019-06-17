@@ -1,38 +1,38 @@
-# 支持组件
+# 支持的组件
 
-<p class="description">以下是Material Design组件和功能的列表. 当前由Material-UI支持的那些被高亮显示✓.</p>
+<p class="description">以下是 Material Design 组件和功能的列表. 我们将那些Material-UI 支持的组件和功能用高亮✓来显示.</p>
 
-虽然我们努力遵循实践中的指导原则（在指导原则相互矛盾的情况下应用 常识 - 比 可能预期的更常见），但我们不希望支持每个组件，或每个组件的每 特征，而是提供构建块 允许开发人员创建引人注目的用户界面和体验。
+虽然我们尽量遵循一些可行的指南（当指南有争议性的时候我们会更多地依赖于常识，而这种情况会比您想象中的发生更多），但是我们并不指望能够做到支持每一个组件或者每一个组件下的功能。我们更倾向于通过提供一些构建好的模块，让开发者创造更实用的用户界面以及用户体验。
 
-如果您希望在此处添加对组件或功能未高亮显示的支持, 请搜索相关的 [ GitHub 问题 ](https://github.com/mui-org/material-ui/issues), 或创建一个新的问题 来讨论该方法, 然后再提交pull请求。
+如果您希望加对一个组件或一个未高亮显示的功能加以支持, 请搜索相关的 [ GitHub 问题 ](https://github.com/mui-org/material-ui/issues), 或创建一个新的问题来讨论该方法, 然后再提交pull request。
 
 - App bars 
   - **[Top](https://material.io/design/components/app-bars-top.html) ✓**
   - **[Bottom](https://material.io/design/components/app-bars-bottom.html) ✓**
-- **[Banners](https://material.io/design/components/banners.html)** ([可以组成](https://medium.com/material-ui/introducing-material-ui-design-system-93e921beb8df))
-- **[Bottom navigation](https://material.io/design/components/bottom-navigation.html) ✓**
+- **[横幅(Banners)](https://material.io/design/components/banners.html)** ([可组装](https://medium.com/material-ui/introducing-material-ui-design-system-93e921beb8df))
+- **[底部导航(Bottom navigation)](https://material.io/design/components/bottom-navigation.html) ✓**
 - **[Buttons](https://material.io/design/components/buttons.html) ✓** 
   - **[Text & contained buttons (先前 flat & raised)](https://material.io/design/components/buttons.html) ✓**
-  - **[Toggle buttons](https://material.io/design/components/buttons.html#buttons-toggle-buttons) ~** ([Lab](/lab/about/))
+  - **[Toggle buttons](https://material.io/design/components/buttons.html#buttons-toggle-buttons) ~** ([Lab](/components/about-the-lab/))
   - **[Icon toggle buttons](https://material.io/design/components/buttons.html#toggle-button) ✓** (Custom Checkbox)
 - **[Buttons: Floating Action Button](https://material.io/design/components/buttons-floating-action-button.html) ✓** 
   - 过渡动画: 
-    - **[Speed dial](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions) ~** ([Lab](/lab/about/))
+    - **[Speed dial](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions) ~** ([Lab](/components/about-the-lab/))
     - [Menu](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions)
-    - [Morph](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions)
-    - [Full screen](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions)
+    - [变形(Morph)](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions)
+    - [全屏(Full screen)](https://material.io/design/components/buttons-floating-action-button.html#types-of-transitions)
   - **[Extended FAB](https://material.io/design/components/buttons-floating-action-button.html#extended-fab) ✓** 
     - Speed dial
-- **[Cards](https://material.io/design/components/cards.html) ✓**
+- **[卡片(Cards)](https://material.io/design/components/cards.html) ✓**
 - **[Chips](https://material.io/design/components/chips.html) ✓** 
   - **[Input](https://material.io/design/components/chips.html#input-chips) ✓**
   - [Choice](https://material.io/design/components/chips.html#choice-chips)
   - [Filter](https://material.io/design/components/chips.html#filter-chips)
   - [Action](https://material.io/design/components/chips.html#action-chips)
-- **[Data tables](https://material.io/design/components/data-tables.html) ✓** 
+- **[数据表(Data tables)](https://material.io/design/components/data-tables.html) ✓** 
   - **Sortable ✓**
-  - **Selectable ✓**
-  - **Pagination ✓**
+  - **可选择(Selectable) ✓**
+  - **分页(Pagination) ✓**
 - **[Dialogs](https://material.io/design/components/dialogs.html) ✓** 
   - **[Alert dialog](https://material.io/design/components/dialogs.html#alert-dialog) ✓**
   - **[Simple dialogs](https://material.io/design/components/dialogs.html#simple-dialog) ✓** （可以用Dialog和List组成。）
@@ -73,7 +73,7 @@
   - **[Checkbox](https://material.io/design/components/selection-controls.html#checkboxes) ✓**
   - **[Radio button](https://material.io/design/components/selection-controls.html#radio-buttons) ✓**
   - **[Switch](https://material.io/design/components/selection-controls.html#switches) ✓**
-- **[Sliders](https://material.io/design/components/sliders.html) ~** ([Lab](/lab/about/)) 
+- **[Sliders](https://material.io/design/components/sliders.html) ~** ([Lab](/components/about-the-lab/)) 
   - **[Continuous](https://material.io/design/components/sliders.html#continuous-slider) ✓**
   - **[Discrete](https://material.io/design/components/sliders.html#discrete-slider) ~**
 - **[Snackbars](https://material.io/design/components/snackbars.html) ✓** (*旧 Material v1*)
@@ -104,5 +104,5 @@
     - Character counter
 - **[Toolbars](https://material.io/archive/guidelines/components/toolbars.html) ✓** (旧 Material v1)
 - **[Tooltips](https://material.io/design/components/tooltips.html) ✓** 
-  - **Desktop ✓**
-  - **可移动 ✓**
+  - **桌面 ✓**
+  - **移动设备(Mobile) ✓**

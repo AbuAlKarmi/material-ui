@@ -21,10 +21,10 @@ export default ({ attach, nest, primary, theme, red, white, BUTTON, ICON }) => (
         fontSize: 20,
       },
       [nest(ICON.left)]: {
-        marginRight: theme.spacing.unit,
+        marginRight: theme.spacing(1),
       },
       [nest(ICON.right)]: {
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
       },
     },
     outlined: {
@@ -35,7 +35,6 @@ export default ({ attach, nest, primary, theme, red, white, BUTTON, ICON }) => (
       },
     },
     contained: {
-      borderColor: primary.main,
       boxShadow: theme.shadows[0],
       '&$focusVisible': {
         boxShadow: theme.shadows[0],
@@ -55,18 +54,11 @@ export default ({ attach, nest, primary, theme, red, white, BUTTON, ICON }) => (
       },
     },
     containedPrimary: {
-      color: theme.palette.common.white,
       '&:hover': {
         backgroundColor: primary.main,
       },
       '&:active': {
         opacity: 0.6,
-      },
-    },
-    fab: {
-      boxShadow: theme.shadows[2],
-      '&:active': {
-        boxShadow: theme.shadows[4],
       },
     },
   },

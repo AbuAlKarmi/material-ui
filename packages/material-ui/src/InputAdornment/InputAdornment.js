@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { componentPropType } from '@material-ui/utils';
+import clsx from 'clsx';
 import warning from 'warning';
 import Typography from '../Typography';
 import withStyles from '../styles/withStyles';
 import withFormControlContext from '../FormControl/withFormControlContext';
+import FormControlContext from '../FormControl/FormControlContext';
 
 export const styles = {
   /* Styles applied to the root element. */
@@ -35,14 +35,14 @@ export const styles = {
   },
 };
 
-function InputAdornment(props) {
+const InputAdornment = React.forwardRef(function InputAdornment(props, ref) {
   const {
     children,
-    component: Component,
+    component: Component = 'div',
     classes,
     className,
-    disablePointerEvents,
-    disableTypography,
+    disablePointerEvents = false,
+    disableTypography = false,
     muiFormControl,
     position,
     variant: variantProp,
@@ -64,27 +64,30 @@ function InputAdornment(props) {
   }
 
   return (
-    <Component
-      className={classNames(
-        classes.root,
-        {
-          [classes.filled]: variant === 'filled',
-          [classes.positionStart]: position === 'start',
-          [classes.positionEnd]: position === 'end',
-          [classes.disablePointerEvents]: disablePointerEvents,
-        },
-        className,
-      )}
-      {...other}
-    >
-      {typeof children === 'string' && !disableTypography ? (
-        <Typography color="textSecondary">{children}</Typography>
-      ) : (
-        children
-      )}
-    </Component>
+    <FormControlContext.Provider value={null}>
+      <Component
+        className={clsx(
+          classes.root,
+          {
+            [classes.filled]: variant === 'filled',
+            [classes.positionStart]: position === 'start',
+            [classes.positionEnd]: position === 'end',
+            [classes.disablePointerEvents]: disablePointerEvents,
+          },
+          className,
+        )}
+        ref={ref}
+        {...other}
+      >
+        {typeof children === 'string' && !disableTypography ? (
+          <Typography color="textSecondary">{children}</Typography>
+        ) : (
+          children
+        )}
+      </Component>
+    </FormControlContext.Provider>
   );
-}
+});
 
 InputAdornment.propTypes = {
   /**
@@ -93,7 +96,7 @@ InputAdornment.propTypes = {
   children: PropTypes.node.isRequired,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css-api) below for more details.
+   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object.isRequired,
   /**
@@ -104,7 +107,7 @@ InputAdornment.propTypes = {
    * The component used for the root node.
    * Either a string to use a DOM element or a component.
    */
-  component: componentPropType,
+  component: PropTypes.elementType,
   /**
    * Disable pointer events on the root.
    * This allows for the content of the adornment to focus the input on click.
@@ -128,12 +131,6 @@ InputAdornment.propTypes = {
    * you do not have to set this manually.
    */
   variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
-};
-
-InputAdornment.defaultProps = {
-  component: 'div',
-  disablePointerEvents: false,
-  disableTypography: false,
 };
 
 export default withStyles(styles, { name: 'MuiInputAdornment' })(

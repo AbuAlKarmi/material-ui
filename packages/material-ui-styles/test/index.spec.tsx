@@ -1,20 +1,8 @@
 import * as React from 'react';
 import { Theme } from '@material-ui/core';
 import { AppBarProps } from '@material-ui/core/AppBar';
-import { createStyles, getThemeProps, makeStyles } from '@material-ui/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import styled, { StyledProps } from '@material-ui/styles/styled';
-
-function testGetThemeProps(theme: Theme, props: AppBarProps): void {
-  const overriddenProps: AppBarProps = getThemeProps({ name: 'MuiAppBar', props, theme });
-
-  // AvatarProps not assignable to AppBarProps
-  // $ExpectError
-  const wronglyNamedProps: AppBarProps = getThemeProps({
-    name: 'MuiAvatar',
-    props,
-    theme,
-  });
-}
 
 // makeStyles
 {
@@ -99,6 +87,54 @@ function testGetThemeProps(theme: Theme, props: AppBarProps): void {
     // but this would pass anyway
     const alsoClasses = useUnsafeProps(undefined); // runtime: Can't read property color of undefined
   };
+
+  // default theme
+  interface CustomTheme {
+    attribute: number;
+    [key: string]: any;
+  }
+
+  const validCustomTheme = { attribute: 8, otherStuff: true };
+  const invalidCustomTheme = { otherStuff: true };
+
+  const style = (theme: CustomTheme) =>
+    createStyles({
+      root: {
+        margin: theme.attribute,
+      },
+    });
+
+  makeStyles(style, {
+    defaultTheme: validCustomTheme,
+  });
+
+  // $ExpectError
+  makeStyles(style, {
+    defaultTheme: invalidCustomTheme,
+  });
+
+  // Use styles with props and theme without createStyles
+  makeStyles((theme: Theme) => ({
+    root: (props: StyleProps) => ({
+      background: props.color,
+      color: theme.palette.primary.main,
+    }),
+  }));
+
+  {
+    // If any generic is provided, inferrence breaks.
+    // If the proposal https://github.com/Microsoft/TypeScript/issues/26242 goes through, we can fix this.
+    const useStyles = makeStyles<Theme>(theme => ({
+      root: {
+        background: 'blue',
+      },
+    }));
+
+    const classes = useStyles();
+
+    // This doesn't fail, because inferrence is broken
+    classes.other;
+  }
 }
 
 // styled
@@ -119,6 +155,9 @@ function testGetThemeProps(theme: Theme, props: AppBarProps): void {
   interface MyTheme {
     fontFamily: string;
   }
+  const MyThemeInstance: MyTheme = {
+    fontFamily: 'monospace',
+  };
   // tslint:disable-next-line: no-empty-interface
   interface MyComponentProps extends StyledProps {
     defaulted: string;
@@ -132,13 +171,15 @@ function testGetThemeProps(theme: Theme, props: AppBarProps): void {
       return <div className={className}>Greeted?: {defaulted.startsWith('Hello')}</div>;
     }
   }
-  const StyledMyComponent = styled<typeof MyComponent>(MyComponent)((theme: MyTheme) => ({
-    fontFamily: theme.fontFamily,
-  }));
+  const StyledMyComponent = styled<typeof MyComponent>(MyComponent)(
+    ({ theme }: { theme: MyTheme }) => ({
+      fontFamily: theme.fontFamily,
+    }),
+  );
   const renderedMyComponent = (
-    <>
+    <React.Fragment>
       <MyComponent className="test" />
-      <StyledMyComponent />
-    </>
+      <StyledMyComponent theme={MyThemeInstance} />
+    </React.Fragment>
   );
 }

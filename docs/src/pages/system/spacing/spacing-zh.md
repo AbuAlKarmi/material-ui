@@ -1,4 +1,4 @@
-# 间距
+# Spacing（间距）
 
 <p class="description">各种简写响应边距和填充实用程序类，用于修改元素的外观。</p>
 
@@ -18,7 +18,7 @@
 - `l` - 对于设置*margin-left*或*padding-left*的类
 - `r` - 对于设置*margin-right*或*padding-right*的类
 - `x` - 对于设置** -left*和** -right*的类
-- `x` - 对于设置** -top*和** -bottom*的类
+- `y` - 对于设置** -top*和** -bottom*的类
 - 空白 - 用于在元素的所有4个边上设置边距或填充的类
 
 ## 转型
@@ -68,7 +68,7 @@ const theme = {
 <Box mx="auto" /> // margin-left: auto; margin-right: auto;
 ```
 
-## 例
+## 示例
 
 ```jsx
 <Box p={1}>…
@@ -92,7 +92,7 @@ const theme = {
 import { spacing } from '@material-ui/system';
 ```
 
-| 导入名称      | Prop | CSS 属性                          | 主题键                                                              |
+| 导入名称      | Prop | CSS 属性                          | Theme key                                                        |
 |:--------- |:---- |:------------------------------- |:---------------------------------------------------------------- |
 | `spacing` | `m`  | `margin`                        | [`spacing`](/customization/default-theme/?expend-path=$.spacing) |
 | `spacing` | `mt` | `margin-top`                    | [`spacing`](/customization/default-theme/?expend-path=$.spacing) |

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import AppBar from '../components/AppBar';
@@ -28,7 +28,7 @@ const styles = theme => ({
   rightLink: {
     fontSize: 16,
     color: theme.palette.common.white,
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing(3),
   },
   linkSecondary: {
     color: theme.palette.secondary.main,
@@ -48,7 +48,7 @@ function AppAppBar(props) {
             underline="none"
             color="inherit"
             className={classes.title}
-            href="/premium-themes/onepirate"
+            href="/premium-themes/onepirate/"
           >
             {'onepirate'}
           </Link>
@@ -58,15 +58,15 @@ function AppAppBar(props) {
               variant="h6"
               underline="none"
               className={classes.rightLink}
-              href="/premium-themes/onepirate/sign-in"
+              href="/premium-themes/onepirate/sign-in/"
             >
               {'Sign In'}
             </Link>
             <Link
               variant="h6"
               underline="none"
-              className={classNames(classes.rightLink, classes.linkSecondary)}
-              href="/premium-themes/onepirate/sign-up"
+              className={clsx(classes.rightLink, classes.linkSecondary)}
+              href="/premium-themes/onepirate/sign-up/"
             >
               {'Sign Up'}
             </Link>

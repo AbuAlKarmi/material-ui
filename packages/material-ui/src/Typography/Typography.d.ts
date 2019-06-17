@@ -7,14 +7,21 @@ type Style = ThemeStyle | 'srOnly';
 export interface TypographyProps
   extends StandardProps<React.HTMLAttributes<HTMLElement>, TypographyClassKey> {
   align?: PropTypes.Alignment;
-  color?: PropTypes.Color | 'textPrimary' | 'textSecondary' | 'error';
-  component?: React.ReactType<TypographyProps>;
+  color?:
+    | 'initial'
+    | 'inherit'
+    | 'primary'
+    | 'secondary'
+    | 'textPrimary'
+    | 'textSecondary'
+    | 'error';
+  component?: React.ElementType<React.HTMLAttributes<HTMLElement>>;
+  display?: 'initial' | 'block' | 'inline';
   gutterBottom?: boolean;
-  headlineMapping?: { [type in Style]: string };
-  inline?: boolean;
   noWrap?: boolean;
   paragraph?: boolean;
   variant?: Style | 'inherit';
+  variantMapping?: Partial<Record<Style, string>>;
 }
 
 export type TypographyClassKey =
@@ -44,14 +51,8 @@ export type TypographyClassKey =
   | 'colorSecondary'
   | 'colorTextSecondary'
   | 'colorError'
-  | 'inline'
-  | 'display4' // deprecated
-  | 'display3'
-  | 'display2'
-  | 'display1'
-  | 'headline'
-  | 'title'
-  | 'subheading';
+  | 'displayInline'
+  | 'displayBlock';
 
 declare const Typography: React.ComponentType<TypographyProps>;
 

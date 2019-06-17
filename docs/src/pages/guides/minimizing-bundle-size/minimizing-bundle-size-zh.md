@@ -1,57 +1,94 @@
-# 最小化捆绑包大小
+# 最小化打包文件大小
 
-<p class="description">了解有关可用于减少捆绑包大小的工具的详细信息。</p>
+<p class="description">了解有关可用于减少打包文件大小的工具的详细信息。</p>
 
-## 捆绑尺寸很重要
+## 打包文件的大小是很重要的
 
-Material-UI的包大小非常严重，因此使用 [大小限制](https://github.com/ai/size-limit) 来防止引入任何大小的回归。 每次提交时都会检查包的大小：
+Material-UI 的打包文件大小至关重要。 每次当我们有一个新的提交时，我们会为每个包以及那些包的至关重要的部分拍个快照（[查看最新的快照](/size-snapshot)）。 结合 [dangerJS](https://danger.systems/js/) 一起，我们可以在每个 Pull Request 中都可以查看[详细的打包文件的大小变化](https://github.com/mui-org/material-ui/pull/14638#issuecomment-466658459) 。
 
-- 导入 **所有组件**。 这让我们可以发现任何 [不需要的包大小增加](https://github.com/mui-org/material-ui/blob/master/.size-limit.js#L30)。
-- 导入 **单个组件**。 这让我们估计 [核心依赖关系](https://github.com/mui-org/material-ui/blob/master/.size-limit.js#L24)的开销。 （样式，主题等：~18 kB gzipped）
+## 如何减少打包文件的体积？
 
-## 如何减少捆绑尺寸？
-
-为方便起见，Material-UI在顶级 `material-ui` 导入上公开其完整API。 使用这是好的，如果你有树摇工作， 然而，在树上摇晃不支持或在构建链构成的情况下， **这将导致整个库及其依赖要包含** 在您的客户端包。
-
-您有几种方法可以克服这种情况：
-
-### 选项1
-
-您可以直接从 `material-ui /` 导入，以避免拉入未使用的模块。 例如，而不是：
+为方便起见，Material-UI 在顶级 `material-ui` 的 import 上暴露其完整 API。 如果您正在使用 ES 6 的模块，以及一个支持 tree-shaking 的 bundle（ 要求 [`webpack` >= 2.x](https://webpack.js.org/guides/tree-shaking/)，[带有 flag 的 `parcel 打包`](https://en.parceljs.org/cli.html#enable-experimental-scope-hoisting/tree-shaking-support)) ，那么您则可以安全的使用命名导入，并且在您的 bundle 文件里面，预期会产生一个的最小配置的 Material-UI 组件。
 
 ```js
 import { Button, TextField } from '@material-ui/core';
 ```
 
-使用：
+请注意 tree-shaking 通常只运用于生产环境的打包优化。 开发环境的打包则涵盖了完整的库，因此加载时间会比较慢。 在当您导入 `@material-ui/icons` 的时候，这个情况特别显著。 加载时间会大约比那些从顶层 API 的命名导入方式慢六倍。
+
+如果您觉得这样不妥，您还有以下几个选择：
+
+### 选项1
+
+您可以使用路径导入，这样可以避免导入用不到的模块。 例如，相比这样导入：
+
+```js
+import { Button, TextField } from '@material-ui/core';
+```
+
+可以使用：
 
 ```js
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 ```
 
-虽然以这种方式直接导入不使用 [`material-ui / index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js)的导出，但此文件可以作为公共哪些模块的方便参考。 任何未在此处列出的内容都应被视为 **私有**，如有更改，恕不另行通知。 例如， `Tabs` 组件是公共模块，而 `TabIndicator` 是私有模块。
+尽管这样直接导入并不会使用 [`@material-ui/core/index.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/index.js) 中的导出模式，但是对于那些公开的模块来说，此文件仍可以作为一个方便的参考。
+
+请注意，我们只支持第一级和第二级的导入。 以下的这些例子是私有的，它们会给你的打包文件带来重复的模块。
+
+```js
+// 可以
+import { Add as AddIcon } from '@material-ui/icons';
+import { Tabs } from '@material-ui/core';
+//                                 ^^^^ 第一级或者顶层
+
+// 可以
+import AddIcon from '@material-ui/icons/Add';
+import Tabs from '@material-ui/core/Tabs';
+//                                  ^^^^ 第二级
+
+// 不可以
+import TabIndicator from '@material-ui/core/Tabs/TabIndicator';
+//                                               ^^^^^^^^^^^^ 第三极
+```
 
 ### 选项2
 
-另一种选择是继续使用缩短的导入，如下所示，但由于 **Babel插件**，仍然优化了捆绑的大小：
+**重要提示**：此方法只支持 `@material-ui/icons`。 若您经常重新启动您的开发构建，我们推荐你使用此方法。
 
-```js
-import { Button, TextField } from '@material-ui/core';
-```
+另一个选项则是继续使用命名导入，但是通过 `babel` 的插件，仍然可以缩短启动时间。
 
-选择以下插件之一：
+请在以下插件中选择一个：
 
-- [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) 可以自定义，并且有足够的调整与Material-UI一起使用。
-- [babel-transform-imports](https://bitbucket.org/amctheatres/babel-transform-imports) 有一个不同的api而不是 `babel-plugin-import` 但是做同样的事情。
-- [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) 旨在开箱即用，包含所有 `package.json`。
+- [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) 基于以下配置： 
+        js
+        [
+        'babel-plugin-import',
+        {
+          libraryName: '@material-ui/icons',
+          libraryDirectory: 'esm', // or '' if your bundler does not support ES modules
+          camel2DashComponentName: false,
+        },
+        ];
 
-**重要说明**：在向项目添加树摇动功能之前，这两个选项 *都应该是临时的*。
+- [babel-plugin-transform-imports](https://www.npmjs.com/package/babel-plugin-transform-import) 和 ` babel-plugin-import `的 api 是异曲同工的。 
+        js
+        [
+        'transform-imports',
+        {
+          '@material-ui/icons': {
+            transform: '@material-ui/icons/esm/${member}',
+            // for bundlers not supporting ES modules use:
+            // transform: '@material-ui/icons/${member}',
+          },
+        },
+        ];
 
-## ECMAScript中
+## ECMAScript
 
-在npm上发布的包是 **转换为**，带有 [Babel](https://github.com/babel/babel)，以考虑 [支持的平台](/getting-started/supported-platforms/)。
+考虑到一些[支持的平台](/getting-started/supported-platforms/)，在 npm 上发布的包是和 [Babel](https://github.com/babel/babel) 一起被**编译**的。
 
-我们还发布了第二个版本的组件，以针对 **常绿浏览器**。 您可以在 [`/ es` 文件夹](https://unpkg.com/@material-ui/core/es/)下找到此版本。 所有非官方语法都被转换为 [ECMA-262标准](https://www.ecma-international.org/publications/standards/Ecma-262.htm)，仅此而已。 这可用于制作针对不同浏览器的单独捆绑包。 较旧的浏览器将需要更多的JavaScript功能进行转换， 会增加捆绑包的大小。 ES2015运行时功能不包含任何填充。 IE11 +和常绿的浏览器支持所有的 必要的功能。 如果您需要支持其他浏览器，请考虑使用 [`@ babel / polyfill`](https://www.npmjs.com/package/@babel/polyfill)。
+我们同时也发布了这些组件的第二种版本。 您可以在 [`/es` 文件夹](https://unpkg.com/@material-ui/core@next/es/)下找到此版本。 所有非官方的语义都被编译成[ECMA-262 的标准](https://www.ecma-international.org/publications/standards/Ecma-262.htm)，仅此而已。 这样一来，针对不同的浏览器，您可以编译出不同的打包文件。 一些旧的浏览器需编译一些 JavaScript 的功能，这样会增加打包文件的大小。 ES2015 运行的时候的功能中不包含垫片。 IE11+ 和一些长青浏览器会支持所有必要的功能。 如果您需要支持其他浏览器，请考虑使用 [`@ babel/polyfill`](https://www.npmjs.com/package/@babel/polyfill)。
 
-⚠️为了最小化在用户的束的重复代码，我们 **强烈阻止** 从使用库作者 `/es` 的文件夹。
+⚠️为了使得用户打包文件中的重复代码最小化，我们**强烈阻止**库的作者使用`/es` 文件夹。

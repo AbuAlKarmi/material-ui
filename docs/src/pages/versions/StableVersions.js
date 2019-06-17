@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Link from 'docs/src/modules/components/Link';
 
 const GITHUB_RELEASE_BASE_URL = 'https://github.com/mui-org/material-ui/releases/tag/';
+const FILTERED_BRANCHES = ['latest', 'staging', 'l10n', 'next'];
 
 const styles = {
   root: {
@@ -46,7 +47,7 @@ class StableVersions extends React.Component {
   async componentDidMount() {
     const branches = await getBranches();
     let docs = branches.map(n => n.name);
-    docs = docs.filter(version => version !== 'latest');
+    docs = docs.filter(value => FILTERED_BRANCHES.indexOf(value) === -1);
     docs = docs.map(version => ({
       version,
       // Replace dot with dashes for Netlify branch subdomains
@@ -59,7 +60,7 @@ class StableVersions extends React.Component {
     });
     // Legacy documentation.
     docs.push({
-      version: 'v0.20.1',
+      version: 'v0',
       url: 'https://v0.material-ui.com',
     });
     docs = orderBy(docs, 'version', 'desc');
@@ -75,30 +76,32 @@ class StableVersions extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <Table>
+        <Table size="small">
           <TableBody>
             {docs.map(doc => (
               <TableRow key={doc.version}>
-                <TableCell padding="dense">
+                <TableCell>
                   <Typography variant="body2">
                     {doc.version}
                     {doc.version === `v${process.env.LIB_VERSION}` ? ' ✓' : ''}
                   </Typography>
                 </TableCell>
-                <TableCell padding="dense">
+                <TableCell>
                   <Link variant="body2" color="secondary" rel="nofollow" href={doc.url}>
                     Documentation
                   </Link>
                 </TableCell>
-                <TableCell padding="dense">
-                  <Link
-                    variant="body2"
-                    color="secondary"
-                    rel="nofollow"
-                    href={`${GITHUB_RELEASE_BASE_URL}${doc.version}`}
-                  >
-                    Release notes
-                  </Link>
+                <TableCell>
+                  {doc.version.length === 6 ? (
+                    <Link
+                      variant="body2"
+                      color="secondary"
+                      rel="nofollow"
+                      href={`${GITHUB_RELEASE_BASE_URL}${doc.version}`}
+                    >
+                      Release notes
+                    </Link>
+                  ) : null}
                 </TableCell>
               </TableRow>
             ))}

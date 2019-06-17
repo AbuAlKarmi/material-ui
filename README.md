@@ -6,20 +6,21 @@
 
 <div align="center">
 
-[React](http://facebook.github.io/react/) components that implement [Google's Material Design](https://www.google.com/design/spec/material-design/introduction.html).
+[React](https://reactjs.org/) components that implement [Google's Material Design](https://www.google.com/design/spec/material-design/introduction.html).
 
 [![npm package](https://img.shields.io/npm/v/@material-ui/core/latest.svg)](https://www.npmjs.com/package/@material-ui/core)
 [![npm downloads](https://img.shields.io/npm/dm/@material-ui/core.svg)](https://www.npmjs.com/package/@material-ui/core)
 [![CircleCI](https://img.shields.io/circleci/project/github/mui-org/material-ui/master.svg)](https://circleci.com/gh/mui-org/material-ui/tree/master)
-[![Gitter](https://img.shields.io/badge/gitter-join%20chat-f81a65.svg)](https://gitter.im/callemall/material-ui?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://dev.azure.com/mui-org/Material-UI/_apis/build/status/mui-org.material-ui?branchName=master)](https://dev.azure.com/mui-org/Material-UI/_build/latest?definitionId=1&branchName=master)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/material-ui)
 [![Coverage Status](https://img.shields.io/codecov/c/github/mui-org/material-ui/master.svg)](https://codecov.io/gh/mui-org/material-ui/branch/master)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/1320/badge)](https://bestpractices.coreinfrastructure.org/projects/1320)
 ![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 [![Follow on Twitter](https://img.shields.io/twitter/follow/MaterialUI.svg?label=follow+Material-UI)](https://twitter.com/MaterialUI)
-[![PeerDependencies](https://img.shields.io/david/peer/mui-org/material-ui.svg)](https://david-dm.org/mui-org/material-ui?type=peer&path=packages/material-ui)
-[![Dependencies](https://img.shields.io/david/mui-org/material-ui.svg)](https://david-dm.org/mui-org/material-ui?path=packages/material-ui)
-[![DevDependencies](https://img.shields.io/david/dev/mui-org/material-ui.svg)](https://david-dm.org/mui-org/material-ui?type=dev)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/mui-org/material-ui.svg)](http://isitmaintained.com/project/mui-org/material-ui "Average time to resolve an issue")
+[![PeerDependencies](https://david-dm.org/mui-org/material-ui/master/peer-status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?type=peer&path=packages/material-ui)
+[![Dependencies](https://david-dm.org/mui-org/material-ui/master/status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?path=packages/material-ui)
+[![DevDependencies](https://david-dm.org/mui-org/material-ui/master/dev-status.svg?path=packages/material-ui)](https://david-dm.org/mui-org/material-ui/master?type=dev)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/mui-org/material-ui.svg)](https://isitmaintained.com/project/mui-org/material-ui "Average time to resolve an issue")
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/material-ui-docs/localized.svg?cache=v1)](https://translate.material-ui.com/project/material-ui-docs)
 
 </div>
@@ -28,7 +29,7 @@
 
 Material-UI is available as an [npm package](https://www.npmjs.com/package/@material-ui/core).
 
-**[Stable channel v3](https://material-ui.com/)**
+**[Stable channel v4](https://material-ui.com/)**
 ```sh
 // with npm
 npm install @material-ui/core
@@ -37,24 +38,9 @@ npm install @material-ui/core
 yarn add @material-ui/core
 ```
 
-**[Next channel v4.0.0-alpha](https://next.material-ui.com/)**
-```sh
-// with npm
-npm install @material-ui/core@next
-
-// with yarn
-yarn add @material-ui/core@next
-```
+**[v3.x](https://v3.material-ui.com/)** ([Migration from v3 to v4](https://material-ui.com/guides/migration-v3/))
 
 **[v0.x](https://v0.material-ui.com/)** ([Migration to v1](https://material-ui.com/guides/migration-v0x/))
-```sh
-// with npm
-npm install material-ui
-
-// with yarn
-yarn add material-ui
-```
-
 
 Please note that `@next` will only point to pre-releases; to get the latest stable release use `@latest` instead.
 
@@ -77,9 +63,10 @@ Gold Sponsors are those who have pledged $500/month and more to Material-UI.
 via [Patreon](https://www.patreon.com/oliviertassinari)
 
 <p style="display: flex; justify-content: center;">
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="creative-tim" href="https://www.creative-tim.com/?partner=104080" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="126" src="https://avatars1.githubusercontent.com/u/20172349?s=378" alt="creative-tim" title="Premium Themes"></a>
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="tidelift" href="https://tidelift.com/subscription/pkg/npm-material-ui?utm_source=material_ui&utm_medium=referral&utm_campaign=homepage" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="96" src="https://avatars2.githubusercontent.com/u/30204434?s=192" alt="tidelift" title="Get Professionally Supported Material-UI"></a>
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="bitsrc" href="https://bitsrc.io" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="96" src="https://avatars1.githubusercontent.com/u/24789812?s=192" alt="bitsrc" title="The fastest way to share code"></a>
+  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="creative-tim" href="https://www.creative-tim.com/?partner=104080" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="126" src="https://github.com/creativetimofficial.png?size=126" alt="creative-tim" title="Premium Themes"></a>
+  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="tidelift" href="https://tidelift.com/subscription/pkg/npm-material-ui?utm_source=material_ui&utm_medium=referral&utm_campaign=homepage" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="96" src="https://github.com/tidelift.png?size=96" alt="tidelift" title="Get Professionally Supported Material-UI"></a>
+  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="bitsrc" href="https://bit.dev" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="96" src="https://github.com/teambit.png?size=96" alt="bitsrc" title="The fastest way to share code"></a>
+  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="blokt" href="https://blokt.com/" rel="noopener" target="_blank" style="margin-right: 16px;"><img width="96" src="https://material-ui.com/static/images/blokt.jpg" alt="blokt" title="Leading Cryptocurrency News"></a>
 </p>
 
 via [OpenCollective](https://opencollective.com/material-ui)
@@ -87,8 +74,6 @@ via [OpenCollective](https://opencollective.com/material-ui)
 <p style="display: flex; justify-content: center; flex-wrap: wrap;">
   <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="callemall" href="https://www.call-em-all.com" rel="noopener" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/proxy/images?src=https%3A%2F%2Fopencollective-production.s3-us-west-1.amazonaws.com%2Ff4053300-e0ea-11e7-acf0-0fa7c0509f4e.png&height=100" alt="callemall" title="The easy way to message your group"></a>
   <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="localize" href="https://localizejs.com" rel="noopener" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/proxy/images?src=https%3A%2F%2Fopencollective-production.s3-us-west-1.amazonaws.com%2F629dea80-f1ae-11e8-b356-a5942970e22b.png&height=65" alt="localize" title="Application translation & localization platform"></a>
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="yakaz" href="https://yakaz.com" rel="noopener" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/proxy/images?src=https%3A%2F%2Fopencollective-production.s3-us-west-1.amazonaws.com%2Fb47b9630-1586-11e9-a4d4-47c0a7133bdc.png&height=80" alt="yakaz" title="Search classified ads"></a>
-  <a data-ga-event-category="sponsors" data-ga-event-action="logo" data-ga-event-label="zinggrid" href="https://www.zinggrid.com/" rel="noopener" target="_blank" style="margin-right: 16px;"><img src="https://images.opencollective.com/proxy/images?src=https%3A%2F%2Fopencollective-production.s3-us-west-1.amazonaws.com%2F453226e0-258a-11e9-ac89-996ff9caccb7.png&height=45" alt="zinggrid" title="Makes powerful grids easy"></a>
 </p>
 
 ### There is more!
@@ -122,7 +107,7 @@ Yes, it's really all you need to get started as you can see in this live and int
 ## Questions
 
 For *how-to* questions and other non-issues,
-please use [StackOverflow](http://stackoverflow.com/questions/tagged/material-ui) instead of Github issues.
+please use [StackOverflow](https://stackoverflow.com/questions/tagged/material-ui) instead of Github issues.
 There is a StackOverflow tag called "material-ui" that you can use to tag your questions.
 
 ## Examples

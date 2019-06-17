@@ -1,9 +1,7 @@
-/* eslint-disable consistent-this */
-// @inheritedComponent Drawer
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+import { elementTypeAcceptingRef } from '@material-ui/utils';
 import Drawer, { getAnchor, isHorizontal } from '../Drawer/Drawer';
 import { duration } from '../styles/transitions';
 import withTheme from '../styles/withTheme';
@@ -25,380 +23,401 @@ export function reset() {
   nodeThatClaimedTheSwipe = null;
 }
 
-/* istanbul ignore if */
-if (process.env.NODE_ENV !== 'production' && !React.createContext) {
-  throw new Error('Material-UI: react@16.3.0 or greater is required.');
+function calculateCurrentX(anchor, touches) {
+  return anchor === 'right' ? document.body.offsetWidth - touches[0].pageX : touches[0].pageX;
 }
 
-class SwipeableDrawer extends React.Component {
-  state = {};
+function calculateCurrentY(anchor, touches) {
+  return anchor === 'bottom' ? window.innerHeight - touches[0].clientY : touches[0].clientY;
+}
 
-  isSwiping = null;
+function getMaxTranslate(horizontalSwipe, paperInstance) {
+  return horizontalSwipe ? paperInstance.clientWidth : paperInstance.clientHeight;
+}
 
-  componentDidMount() {
-    if (this.props.variant === 'temporary') {
-      this.listenTouchStart();
-    }
-  }
+function getTranslate(currentTranslate, startLocation, open, maxTranslate) {
+  return Math.min(
+    Math.max(
+      open ? startLocation - currentTranslate : maxTranslate + startLocation - currentTranslate,
+      0,
+    ),
+    maxTranslate,
+  );
+}
 
-  componentDidUpdate(prevProps) {
-    const variant = this.props.variant;
-    const prevVariant = prevProps.variant;
+const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
-    if (variant !== prevVariant) {
-      if (variant === 'temporary') {
-        this.listenTouchStart();
-      } else if (prevVariant === 'temporary') {
-        this.removeTouchStart();
+const SwipeableDrawer = React.forwardRef(function SwipeableDrawer(props, ref) {
+  const {
+    anchor,
+    disableBackdropTransition,
+    disableDiscovery,
+    disableSwipeToOpen,
+    hideBackdrop,
+    hysteresis,
+    minFlingVelocity,
+    ModalProps: { BackdropProps, ...ModalPropsProp } = {},
+    onClose,
+    onOpen,
+    open,
+    PaperProps = {},
+    SwipeAreaProps,
+    swipeAreaWidth,
+    theme,
+    transitionDuration,
+    variant,
+    ...other
+  } = props;
+
+  const [maybeSwiping, setMaybeSwiping] = React.useState(false);
+  const swipeInstance = React.useRef({
+    isSwiping: null,
+  });
+  const swipeAreaRef = React.useRef();
+  const backdropRef = React.useRef();
+  const paperRef = React.useRef();
+
+  const touchDetected = React.useRef(false);
+  const openRef = React.useRef(open);
+
+  // Use a ref so the open value used is always up to date inside useCallback.
+  useEnhancedEffect(() => {
+    openRef.current = open;
+  }, [open]);
+
+  const setPosition = React.useCallback(
+    (translate, options = {}) => {
+      const { mode = null, changeTransition = true } = options;
+
+      const anchorRtl = getAnchor(theme, anchor);
+      const rtlTranslateMultiplier = ['right', 'bottom'].indexOf(anchorRtl) !== -1 ? 1 : -1;
+      const horizontalSwipe = isHorizontal(anchor);
+
+      const transform = horizontalSwipe
+        ? `translate(${rtlTranslateMultiplier * translate}px, 0)`
+        : `translate(0, ${rtlTranslateMultiplier * translate}px)`;
+      const drawerStyle = paperRef.current.style;
+      drawerStyle.webkitTransform = transform;
+      drawerStyle.transform = transform;
+
+      let transition = '';
+
+      if (mode) {
+        transition = theme.transitions.create(
+          'all',
+          getTransitionProps(
+            {
+              timeout: transitionDuration,
+            },
+            {
+              mode,
+            },
+          ),
+        );
       }
-    }
-  }
-
-  componentWillUnmount() {
-    this.removeTouchStart();
-    this.removeBodyTouchListeners();
-
-    // We need to release the lock.
-    if (nodeThatClaimedTheSwipe === this) {
-      nodeThatClaimedTheSwipe = null;
-    }
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (typeof prevState.maybeSwiping === 'undefined') {
-      return {
-        maybeSwiping: false,
-        open: nextProps.open,
-      };
-    }
-
-    if (!nextProps.open && prevState.open) {
-      return {
-        maybeSwiping: false,
-        open: nextProps.open,
-      };
-    }
-
-    return {
-      open: nextProps.open,
-    };
-  }
-
-  getMaxTranslate() {
-    return isHorizontal(this.props) ? this.paperRef.clientWidth : this.paperRef.clientHeight;
-  }
-
-  getTranslate(current) {
-    const start = isHorizontal(this.props) ? this.startX : this.startY;
-    return Math.min(
-      Math.max(this.props.open ? start - current : this.getMaxTranslate() + start - current, 0),
-      this.getMaxTranslate(),
-    );
-  }
-
-  setPosition(translate, options = {}) {
-    const { mode = null, changeTransition = true } = options;
-
-    const anchor = getAnchor(this.props);
-    const rtlTranslateMultiplier = ['right', 'bottom'].indexOf(anchor) !== -1 ? 1 : -1;
-    const transform = isHorizontal(this.props)
-      ? `translate(${rtlTranslateMultiplier * translate}px, 0)`
-      : `translate(0, ${rtlTranslateMultiplier * translate}px)`;
-    const drawerStyle = this.paperRef.style;
-    drawerStyle.webkitTransform = transform;
-    drawerStyle.transform = transform;
-
-    let transition = '';
-
-    if (mode) {
-      transition = this.props.theme.transitions.create(
-        'all',
-        getTransitionProps(
-          {
-            timeout: this.props.transitionDuration,
-          },
-          {
-            mode,
-          },
-        ),
-      );
-    }
-
-    if (changeTransition) {
-      drawerStyle.webkitTransition = transition;
-      drawerStyle.transition = transition;
-    }
-
-    if (!this.props.disableBackdropTransition && !this.props.hideBackdrop) {
-      const backdropStyle = this.backdropRef.style;
-      backdropStyle.opacity = 1 - translate / this.getMaxTranslate();
 
       if (changeTransition) {
-        backdropStyle.webkitTransition = transition;
-        backdropStyle.transition = transition;
+        drawerStyle.webkitTransition = transition;
+        drawerStyle.transition = transition;
       }
-    }
-  }
 
-  handleBodyTouchStart = event => {
-    // We are not supposed to handle this touch move.
-    if (nodeThatClaimedTheSwipe !== null && nodeThatClaimedTheSwipe !== this) {
-      return;
-    }
+      if (!disableBackdropTransition && !hideBackdrop) {
+        const backdropStyle = backdropRef.current.style;
+        backdropStyle.opacity = 1 - translate / getMaxTranslate(horizontalSwipe, paperRef.current);
 
-    const { disableDiscovery, disableSwipeToOpen, open, swipeAreaWidth } = this.props;
-    const anchor = getAnchor(this.props);
-    const currentX =
-      anchor === 'right'
-        ? document.body.offsetWidth - event.touches[0].pageX
-        : event.touches[0].pageX;
-    const currentY =
-      anchor === 'bottom'
-        ? window.innerHeight - event.touches[0].clientY
-        : event.touches[0].clientY;
+        if (changeTransition) {
+          backdropStyle.webkitTransition = transition;
+          backdropStyle.transition = transition;
+        }
+      }
+    },
+    [anchor, disableBackdropTransition, hideBackdrop, theme, transitionDuration],
+  );
 
-    if (!open) {
-      if (disableSwipeToOpen) {
+  const handleBodyTouchEnd = React.useCallback(
+    event => {
+      if (!touchDetected.current) {
         return;
       }
-      if (isHorizontal(this.props)) {
-        if (currentX > swipeAreaWidth) {
-          return;
-        }
-      } else if (currentY > swipeAreaWidth) {
+      nodeThatClaimedTheSwipe = null;
+      touchDetected.current = false;
+      setMaybeSwiping(false);
+
+      // The swipe wasn't started.
+      if (!swipeInstance.current.isSwiping) {
+        swipeInstance.current.isSwiping = null;
         return;
       }
-    }
 
-    nodeThatClaimedTheSwipe = this;
-    this.startX = currentX;
-    this.startY = currentY;
+      swipeInstance.current.isSwiping = null;
 
-    this.setState({ maybeSwiping: true });
-    if (!open && this.paperRef) {
-      // The ref may be null when a parent component updates while swiping.
-      this.setPosition(this.getMaxTranslate() + (disableDiscovery ? 20 : -swipeAreaWidth), {
-        changeTransition: false,
-      });
-    }
-
-    this.velocity = 0;
-    this.lastTime = null;
-    this.lastTranslate = null;
-
-    document.body.addEventListener('touchmove', this.handleBodyTouchMove, { passive: false });
-    document.body.addEventListener('touchend', this.handleBodyTouchEnd);
-    // https://plus.google.com/+PaulIrish/posts/KTwfn1Y2238
-    document.body.addEventListener('touchcancel', this.handleBodyTouchEnd);
-  };
-
-  handleBodyTouchMove = event => {
-    // the ref may be null when a parent component updates while swiping
-    if (!this.paperRef) return;
-
-    const anchor = getAnchor(this.props);
-    const horizontalSwipe = isHorizontal(this.props);
-
-    const currentX =
-      anchor === 'right'
-        ? document.body.offsetWidth - event.touches[0].pageX
-        : event.touches[0].pageX;
-    const currentY =
-      anchor === 'bottom'
-        ? window.innerHeight - event.touches[0].clientY
-        : event.touches[0].clientY;
-
-    // We don't know yet.
-    if (this.isSwiping == null) {
-      const dx = Math.abs(currentX - this.startX);
-      const dy = Math.abs(currentY - this.startY);
-
-      // We are likely to be swiping, let's prevent the scroll event on iOS.
-      if (dx > dy) {
-        event.preventDefault();
+      const anchorRtl = getAnchor(theme, anchor);
+      const horizontal = isHorizontal(anchor);
+      let current;
+      if (horizontal) {
+        current = calculateCurrentX(anchorRtl, event.changedTouches);
+      } else {
+        current = calculateCurrentY(anchorRtl, event.changedTouches);
       }
 
-      const isSwiping = horizontalSwipe
-        ? dx > dy && dx > UNCERTAINTY_THRESHOLD
-        : dy > dx && dy > UNCERTAINTY_THRESHOLD;
+      const startLocation = horizontal
+        ? swipeInstance.current.startX
+        : swipeInstance.current.startY;
+      const maxTranslate = getMaxTranslate(horizontal, paperRef.current);
+      const currentTranslate = getTranslate(current, startLocation, openRef.current, maxTranslate);
+      const translateRatio = currentTranslate / maxTranslate;
 
-      if (
-        isSwiping === true ||
-        (horizontalSwipe ? dy > UNCERTAINTY_THRESHOLD : dx > UNCERTAINTY_THRESHOLD)
-      ) {
-        this.isSwiping = isSwiping;
-        if (!isSwiping) {
-          this.handleBodyTouchEnd(event);
-          return;
+      if (openRef.current) {
+        if (swipeInstance.current.velocity > minFlingVelocity || translateRatio > hysteresis) {
+          onClose();
+        } else {
+          // Reset the position, the swipe was aborted.
+          setPosition(0, {
+            mode: 'exit',
+          });
         }
 
-        // Shift the starting point.
-        this.startX = currentX;
-        this.startY = currentY;
+        return;
+      }
 
-        // Compensate for the part of the drawer displayed on touch start.
-        if (!this.props.disableDiscovery && !this.props.open) {
-          if (horizontalSwipe) {
-            this.startX -= this.props.swipeAreaWidth;
-          } else {
-            this.startY -= this.props.swipeAreaWidth;
+      if (swipeInstance.current.velocity < -minFlingVelocity || 1 - translateRatio > hysteresis) {
+        onOpen();
+      } else {
+        // Reset the position, the swipe was aborted.
+        setPosition(getMaxTranslate(horizontal, paperRef.current), {
+          mode: 'enter',
+        });
+      }
+    },
+    [anchor, hysteresis, minFlingVelocity, onClose, onOpen, setPosition, theme],
+  );
+
+  const handleBodyTouchMove = React.useCallback(
+    event => {
+      // the ref may be null when a parent component updates while swiping
+      if (!paperRef.current || !touchDetected.current) {
+        return;
+      }
+
+      const anchorRtl = getAnchor(theme, anchor);
+      const horizontalSwipe = isHorizontal(anchor);
+
+      const currentX = calculateCurrentX(anchorRtl, event.touches);
+      const currentY = calculateCurrentY(anchorRtl, event.touches);
+
+      // We don't know yet.
+      if (swipeInstance.current.isSwiping == null) {
+        const dx = Math.abs(currentX - swipeInstance.current.startX);
+        const dy = Math.abs(currentY - swipeInstance.current.startY);
+
+        // We are likely to be swiping, let's prevent the scroll event on iOS.
+        if (dx > dy) {
+          if (event.cancelable) {
+            event.preventDefault();
+          }
+        }
+
+        const definitelySwiping = horizontalSwipe
+          ? dx > dy && dx > UNCERTAINTY_THRESHOLD
+          : dy > dx && dy > UNCERTAINTY_THRESHOLD;
+
+        if (
+          definitelySwiping === true ||
+          (horizontalSwipe ? dy > UNCERTAINTY_THRESHOLD : dx > UNCERTAINTY_THRESHOLD)
+        ) {
+          swipeInstance.current.isSwiping = definitelySwiping;
+          if (!definitelySwiping) {
+            handleBodyTouchEnd(event);
+            return;
+          }
+
+          // Shift the starting point.
+          swipeInstance.current.startX = currentX;
+          swipeInstance.current.startY = currentY;
+
+          // Compensate for the part of the drawer displayed on touch start.
+          if (!disableDiscovery && !openRef.current) {
+            if (horizontalSwipe) {
+              swipeInstance.current.startX -= swipeAreaWidth;
+            } else {
+              swipeInstance.current.startY -= swipeAreaWidth;
+            }
           }
         }
       }
-    }
 
-    if (!this.isSwiping) {
-      return;
-    }
+      if (!swipeInstance.current.isSwiping) {
+        return;
+      }
+      const startLocation = horizontalSwipe
+        ? swipeInstance.current.startX
+        : swipeInstance.current.startY;
+      const maxTranslate = getMaxTranslate(horizontalSwipe, paperRef.current);
 
-    const translate = this.getTranslate(horizontalSwipe ? currentX : currentY);
+      const translate = getTranslate(
+        horizontalSwipe ? currentX : currentY,
+        startLocation,
+        openRef.current,
+        maxTranslate,
+      );
 
-    if (this.lastTranslate === null) {
-      this.lastTranslate = translate;
-      this.lastTime = performance.now() + 1;
-    }
-
-    const velocity = ((translate - this.lastTranslate) / (performance.now() - this.lastTime)) * 1e3;
-
-    // Low Pass filter.
-    this.velocity = this.velocity * 0.4 + velocity * 0.6;
-
-    this.lastTranslate = translate;
-    this.lastTime = performance.now();
-
-    // We are swiping, let's prevent the scroll event on iOS.
-    event.preventDefault();
-    this.setPosition(translate);
-  };
-
-  handleBodyTouchEnd = event => {
-    nodeThatClaimedTheSwipe = null;
-    this.removeBodyTouchListeners();
-    this.setState({ maybeSwiping: false });
-
-    // The swipe wasn't started.
-    if (!this.isSwiping) {
-      this.isSwiping = null;
-      return;
-    }
-
-    this.isSwiping = null;
-
-    const anchor = getAnchor(this.props);
-    let current;
-    if (isHorizontal(this.props)) {
-      current =
-        anchor === 'right'
-          ? document.body.offsetWidth - event.changedTouches[0].pageX
-          : event.changedTouches[0].pageX;
-    } else {
-      current =
-        anchor === 'bottom'
-          ? window.innerHeight - event.changedTouches[0].clientY
-          : event.changedTouches[0].clientY;
-    }
-
-    const translateRatio = this.getTranslate(current) / this.getMaxTranslate();
-
-    if (this.props.open) {
-      if (this.velocity > this.props.minFlingVelocity || translateRatio > this.props.hysteresis) {
-        this.props.onClose();
-      } else {
-        // Reset the position, the swipe was aborted.
-        this.setPosition(0, {
-          mode: 'exit',
-        });
+      if (swipeInstance.current.lastTranslate === null) {
+        swipeInstance.current.lastTranslate = translate;
+        swipeInstance.current.lastTime = performance.now() + 1;
       }
 
-      return;
+      const velocity =
+        ((translate - swipeInstance.current.lastTranslate) /
+          (performance.now() - swipeInstance.current.lastTime)) *
+        1e3;
+
+      // Low Pass filter.
+      swipeInstance.current.velocity = swipeInstance.current.velocity * 0.4 + velocity * 0.6;
+
+      swipeInstance.current.lastTranslate = translate;
+      swipeInstance.current.lastTime = performance.now();
+
+      // We are swiping, let's prevent the scroll event on iOS.
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+      setPosition(translate);
+    },
+    [setPosition, handleBodyTouchEnd, anchor, disableDiscovery, swipeAreaWidth, theme],
+  );
+
+  const handleBodyTouchStart = React.useCallback(
+    event => {
+      // We are not supposed to handle this touch move.
+      if (nodeThatClaimedTheSwipe !== null && nodeThatClaimedTheSwipe !== swipeInstance.current) {
+        return;
+      }
+
+      const anchorRtl = getAnchor(theme, anchor);
+      const horizontalSwipe = isHorizontal(anchor);
+
+      const currentX = calculateCurrentX(anchorRtl, event.touches);
+      const currentY = calculateCurrentY(anchorRtl, event.touches);
+
+      if (!openRef.current) {
+        if (disableSwipeToOpen || event.target !== swipeAreaRef.current) {
+          return;
+        }
+        if (horizontalSwipe) {
+          if (currentX > swipeAreaWidth) {
+            return;
+          }
+        } else if (currentY > swipeAreaWidth) {
+          return;
+        }
+      }
+
+      nodeThatClaimedTheSwipe = swipeInstance.current;
+      swipeInstance.current.startX = currentX;
+      swipeInstance.current.startY = currentY;
+
+      setMaybeSwiping(true);
+      if (!openRef.current && paperRef.current) {
+        // The ref may be null when a parent component updates while swiping.
+        setPosition(
+          getMaxTranslate(horizontalSwipe, paperRef.current) +
+            (disableDiscovery ? 20 : -swipeAreaWidth),
+          {
+            changeTransition: false,
+          },
+        );
+      }
+
+      swipeInstance.current.velocity = 0;
+      swipeInstance.current.lastTime = null;
+      swipeInstance.current.lastTranslate = null;
+
+      touchDetected.current = true;
+    },
+    [setPosition, anchor, disableDiscovery, disableSwipeToOpen, swipeAreaWidth, theme],
+  );
+
+  React.useEffect(() => {
+    if (variant === 'temporary') {
+      document.body.addEventListener('touchstart', handleBodyTouchStart);
+      document.body.addEventListener('touchmove', handleBodyTouchMove, { passive: false });
+      document.body.addEventListener('touchend', handleBodyTouchEnd);
+
+      return () => {
+        document.body.removeEventListener('touchstart', handleBodyTouchStart);
+        document.body.removeEventListener('touchmove', handleBodyTouchMove, { passive: false });
+        document.body.removeEventListener('touchend', handleBodyTouchEnd);
+      };
     }
 
-    if (
-      this.velocity < -this.props.minFlingVelocity ||
-      1 - translateRatio > this.props.hysteresis
-    ) {
-      this.props.onOpen();
-    } else {
-      // Reset the position, the swipe was aborted.
-      this.setPosition(this.getMaxTranslate(), {
-        mode: 'enter',
-      });
+    return undefined;
+  }, [variant, handleBodyTouchStart, handleBodyTouchMove, handleBodyTouchEnd]);
+
+  React.useEffect(
+    () => () => {
+      // We need to release the lock.
+      if (nodeThatClaimedTheSwipe === swipeInstance.current) {
+        nodeThatClaimedTheSwipe = null;
+      }
+    },
+    [],
+  );
+
+  React.useEffect(() => {
+    if (!open) {
+      setMaybeSwiping(false);
     }
-  };
+  }, [open]);
 
-  handleBackdropRef = ref => {
-    this.backdropRef = ref ? ReactDOM.findDOMNode(ref) : null;
-  };
+  const handleBackdropRef = React.useCallback(instance => {
+    // #StrictMode ready
+    backdropRef.current = ReactDOM.findDOMNode(instance);
+  }, []);
 
-  handlePaperRef = ref => {
-    this.paperRef = ref ? ReactDOM.findDOMNode(ref) : null;
-  };
+  const handlePaperRef = React.useCallback(instance => {
+    // #StrictMode ready
+    paperRef.current = ReactDOM.findDOMNode(instance);
+  }, []);
 
-  listenTouchStart() {
-    document.body.addEventListener('touchstart', this.handleBodyTouchStart);
-  }
-
-  removeTouchStart() {
-    document.body.removeEventListener('touchstart', this.handleBodyTouchStart);
-  }
-
-  removeBodyTouchListeners() {
-    document.body.removeEventListener('touchmove', this.handleBodyTouchMove, { passive: false });
-    document.body.removeEventListener('touchend', this.handleBodyTouchEnd);
-    document.body.removeEventListener('touchcancel', this.handleBodyTouchEnd);
-  }
-
-  render() {
-    const {
-      anchor,
-      disableBackdropTransition,
-      disableDiscovery,
-      disableSwipeToOpen,
-      hysteresis,
-      minFlingVelocity,
-      ModalProps: { BackdropProps, ...ModalPropsProp } = {},
-      onOpen,
-      open,
-      PaperProps = {},
-      SwipeAreaProps,
-      swipeAreaWidth,
-      variant,
-      ...other
-    } = this.props;
-    const { maybeSwiping } = this.state;
-
-    return (
-      <React.Fragment>
-        <Drawer
-          open={variant === 'temporary' && maybeSwiping ? true : open}
-          variant={variant}
-          ModalProps={{
-            BackdropProps: {
-              ...BackdropProps,
-              ref: this.handleBackdropRef,
-            },
-            ...ModalPropsProp,
-          }}
-          PaperProps={{
-            ...PaperProps,
-            style: {
-              pointerEvents: variant === 'temporary' && !open ? 'none' : '',
-              ...PaperProps.style,
-            },
-            ref: this.handlePaperRef,
-          }}
-          anchor={anchor}
-          {...other}
-        />
-        {!disableDiscovery && !disableSwipeToOpen && variant === 'temporary' && (
-          <NoSsr>
-            <SwipeArea anchor={anchor} width={swipeAreaWidth} {...SwipeAreaProps} />
-          </NoSsr>
-        )}
-      </React.Fragment>
-    );
-  }
-}
+  return (
+    <React.Fragment>
+      <Drawer
+        open={variant === 'temporary' && maybeSwiping ? true : open}
+        variant={variant}
+        ModalProps={{
+          BackdropProps: {
+            ...BackdropProps,
+            ref: handleBackdropRef,
+          },
+          ...ModalPropsProp,
+        }}
+        PaperProps={{
+          ...PaperProps,
+          style: {
+            pointerEvents: variant === 'temporary' && !open ? 'none' : '',
+            ...PaperProps.style,
+          },
+          ref: handlePaperRef,
+        }}
+        anchor={anchor}
+        transitionDuration={transitionDuration}
+        onClose={onClose}
+        ref={ref}
+        {...other}
+      />
+      {!disableSwipeToOpen && variant === 'temporary' && (
+        <NoSsr>
+          <SwipeArea
+            anchor={anchor}
+            ref={swipeAreaRef}
+            width={swipeAreaWidth}
+            {...SwipeAreaProps}
+          />
+        </NoSsr>
+      )}
+    </React.Fragment>
+  );
+});
 
 SwipeableDrawer.propTypes = {
   /**
@@ -438,7 +457,11 @@ SwipeableDrawer.propTypes = {
   /**
    * @ignore
    */
-  ModalProps: PropTypes.object,
+  ModalProps: PropTypes.shape({
+    BackdropProps: PropTypes.shape({
+      component: elementTypeAcceptingRef,
+    }),
+  }),
   /**
    * Callback fired when the component requests to be closed.
    *
@@ -458,7 +481,9 @@ SwipeableDrawer.propTypes = {
   /**
    * @ignore
    */
-  PaperProps: PropTypes.object,
+  PaperProps: PropTypes.shape({
+    component: elementTypeAcceptingRef,
+  }),
   /**
    * Properties applied to the swipe area element.
    */
@@ -499,4 +524,4 @@ SwipeableDrawer.defaultProps = {
   variant: 'temporary', // Mobile first.
 };
 
-export default withTheme()(SwipeableDrawer);
+export default withTheme(SwipeableDrawer);

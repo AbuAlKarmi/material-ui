@@ -2,10 +2,9 @@ import withRoot from './modules/withRoot';
 // --- Post bootstrap -----
 import React from 'react';
 import PropTypes from 'prop-types';
-import compose from 'recompose/compose';
+import { Field, Form, FormSpy } from 'react-final-form';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
-import { Field, Form, FormSpy } from 'react-final-form';
 import Typography from './modules/components/Typography';
 import AppFooter from './modules/views/AppFooter';
 import AppAppBar from './modules/views/AppAppBar';
@@ -14,17 +13,18 @@ import { email, required } from './modules/form/validation';
 import RFTextField from './modules/form/RFTextField';
 import FormButton from './modules/form/FormButton';
 import FormFeedback from './modules/form/FormFeedback';
+import compose from 'docs/src/modules/utils/compose';
 
 const styles = theme => ({
   form: {
-    marginTop: theme.spacing.unit * 6,
+    marginTop: theme.spacing(6),
   },
   button: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
   },
   feedback: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -62,7 +62,7 @@ class SignIn extends React.Component {
             </Typography>
             <Typography variant="body2" align="center">
               {'Not a member yet? '}
-              <Link href="/premium-themes/onepirate/sign-up" align="center" underline="always">
+              <Link href="/premium-themes/onepirate/sign-up/" align="center" underline="always">
                 Sign Up here
               </Link>
             </Typography>
@@ -120,7 +120,7 @@ class SignIn extends React.Component {
             )}
           </Form>
           <Typography align="center">
-            <Link underline="always" href="/premium-themes/onepirate/forgot-password">
+            <Link underline="always" href="/premium-themes/onepirate/forgot-password/">
               Forgot password?
             </Link>
           </Typography>

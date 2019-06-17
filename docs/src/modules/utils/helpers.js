@@ -1,9 +1,9 @@
-import warning from 'warning';
-import upperFirst from 'lodash/upperFirst';
-import camelCase from 'lodash/camelCase';
-import { CODE_VARIANTS } from 'docs/src/modules/constants';
+const warning = require('warning');
+const upperFirst = require('lodash/upperFirst');
+const camelCase = require('lodash/camelCase');
+const { CODE_VARIANTS, LANGUAGES } = require('../constants');
 
-export function titleize(string) {
+function titleize(string) {
   warning(
     typeof string === 'string' && string.length > 0,
     'titleize(string) expects a non empty string argument.',
@@ -15,18 +15,28 @@ export function titleize(string) {
     .join(' ');
 }
 
-export function pageToTitle(page) {
+function pageToTitle(page) {
+  if (page.title === false) {
+    return null;
+  }
+
   if (page.title) {
     return page.title;
   }
 
-  const name = page.pathname.replace(/.*\//, '');
+  const path = page.subheader || page.pathname;
+  const name = path.replace(/.*\//, '');
 
-  if (page.pathname.indexOf('/api/') !== -1) {
+  if (path.indexOf('/api/') !== -1) {
     return upperFirst(camelCase(name));
   }
 
   return titleize(name);
+}
+
+function pageToTitleI18n(page, t) {
+  const path = page.subheader || page.pathname;
+  return t(`pages.${path}`, { ignoreWarning: true }) || pageToTitle(page);
 }
 
 /**
@@ -72,14 +82,22 @@ function addTypeDeps(deps) {
  * @param {'next' | 'latest'} options.reactVersion
  * @returns {Record<string, 'latest'>} map of packages with their required version
  */
-export function getDependencies(raw, options = {}) {
+function getDependencies(raw, options = {}) {
   const { codeLanguage = CODE_VARIANTS.JS, reactVersion = 'latest' } = options;
   const deps = {
     'react-dom': reactVersion,
     react: reactVersion,
   };
   const versions = {
+    '@material-ui/core': 'latest',
+    '@material-ui/icons': 'latest',
+    '@material-ui/lab': 'latest',
+    '@material-ui/styles': 'latest',
+    '@material-ui/system': 'latest',
+    '@material-ui/utils': 'latest',
     'date-fns': 'next',
+    jss: 'next',
+    'jss-plugin-template': 'next',
   };
   const re = /^import\s.*\sfrom\s+'([^']+)|import\s'([^']+)'/gm;
   let m;
@@ -102,12 +120,38 @@ export function getDependencies(raw, options = {}) {
 
   if (codeLanguage === CODE_VARIANTS.TS) {
     addTypeDeps(deps);
+    deps.typescript = 'latest';
   }
 
   return deps;
 }
 
-export function getCookie(name) {
+function getCookie(name) {
   const regex = new RegExp(`(?:(?:^|.*;*)${name}*=*([^;]*).*$)|^.*$`);
   return document.cookie.replace(regex, '$1');
 }
+
+function pathnameToLanguage(pathname) {
+  const userLanguage = pathname.substring(1, 3);
+
+  if (LANGUAGES.indexOf(userLanguage) !== -1 && pathname.indexOf(`/${userLanguage}/`) === 0) {
+    return {
+      userLanguage,
+      canonical: userLanguage === 'en' ? pathname : pathname.substring(3),
+    };
+  }
+
+  return {
+    userLanguage: 'en',
+    canonical: pathname,
+  };
+}
+
+module.exports = {
+  titleize,
+  pageToTitle,
+  pageToTitleI18n,
+  getDependencies,
+  getCookie,
+  pathnameToLanguage,
+};

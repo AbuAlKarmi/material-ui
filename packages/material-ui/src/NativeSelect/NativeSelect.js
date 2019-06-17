@@ -1,8 +1,5 @@
-// @inheritedComponent Input
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { componentPropType } from '@material-ui/utils';
 import NativeSelectInput from './NativeSelectInput';
 import withStyles from '../styles/withStyles';
 import formControlState from '../FormControl/formControlState';
@@ -11,22 +8,16 @@ import ArrowDropDownIcon from '../internal/svg-icons/ArrowDropDown';
 import Input from '../Input';
 
 export const styles = theme => ({
-  /* Styles applied to the `Input` component `root` class. */
-  root: {
-    position: 'relative',
-    width: '100%',
-  },
-  /* Styles applied to the `Input` component `select` class. */
+  /* Styles applied to the select component `root` class. */
+  root: {},
+  /* Styles applied to the select component `select` class. */
   select: {
     '-moz-appearance': 'none', // Reset
     '-webkit-appearance': 'none', // Reset
     // When interacting quickly, the text can end up selected.
     // Native select can't be selected either.
     userSelect: 'none',
-    paddingRight: 32,
     borderRadius: 0, // Reset
-    height: '1.1875em', // Reset (19px), match the native input line-height
-    width: 'calc(100% - 32px)',
     minWidth: 16, // So it doesn't collapse.
     cursor: 'pointer',
     '&:focus': {
@@ -49,27 +40,22 @@ export const styles = theme => ({
       backgroundColor: theme.palette.background.paper,
     },
   },
-  /* Styles applied to the `Input` component if `variant="filled"`. */
-  filled: {
-    width: 'calc(100% - 44px)',
-  },
-  /* Styles applied to the `Input` component if `variant="outlined"`. */
+  /* Styles applied to the select component if `variant="filled"`. */
+  filled: {},
+  /* Styles applied to the select component if `variant="outlined"`. */
   outlined: {
-    width: 'calc(100% - 46px)',
     borderRadius: theme.shape.borderRadius,
   },
-  /* Styles applied to the `Input` component `selectMenu` class. */
+  /* Styles applied to the select component `selectMenu` class. */
   selectMenu: {
-    width: 'auto', // Fix Safari textOverflow
     height: 'auto', // Reset
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
-    minHeight: '1.1875em', // Reset (19px), match the native input line-height
   },
-  /* Styles applied to the `Input` component `disabled` class. */
+  /* Pseudo-class applied to the select component `disabled` class. */
   disabled: {},
-  /* Styles applied to the `Input` component `icon` class. */
+  /* Styles applied to the select component `icon` class. */
   icon: {
     // We use a position absolute over a flexbox in order to forward the pointer events
     // to the input.
@@ -81,15 +67,16 @@ export const styles = theme => ({
   },
 });
 
+const defaultInput = <Input />;
 /**
  * An alternative to `<Select native />` with a much smaller bundle size footprint.
  */
-function NativeSelect(props) {
+const NativeSelect = React.forwardRef(function NativeSelect(props, ref) {
   const {
     children,
     classes,
-    IconComponent,
-    input,
+    IconComponent = ArrowDropDownIcon,
+    input = defaultInput,
     inputProps,
     muiFormControl,
     variant,
@@ -105,6 +92,7 @@ function NativeSelect(props) {
     // Most of the logic is implemented in `NativeSelectInput`.
     // The `Select` component is a simple API wrapper to expose something better to play with.
     inputComponent: NativeSelectInput,
+    select: true,
     inputProps: {
       children,
       classes,
@@ -114,9 +102,10 @@ function NativeSelect(props) {
       ...inputProps,
       ...(input ? input.props.inputProps : {}),
     },
+    ref,
     ...other,
   });
-}
+});
 
 NativeSelect.propTypes = {
   /**
@@ -126,13 +115,13 @@ NativeSelect.propTypes = {
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
-   * See [CSS API](#css-api) below for more details.
+   * See [CSS API](#css) below for more details.
    */
   classes: PropTypes.object.isRequired,
   /**
    * The icon that displays the arrow.
    */
-  IconComponent: componentPropType,
+  IconComponent: PropTypes.elementType,
   /**
    * An `Input` element; does not have to be a material-ui specific `Input`.
    */
@@ -155,21 +144,11 @@ NativeSelect.propTypes = {
   /**
    * The input value.
    */
-  value: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.bool,
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])),
-  ]),
+  value: PropTypes.any,
   /**
    * The variant to use.
    */
   variant: PropTypes.oneOf(['standard', 'outlined', 'filled']),
-};
-
-NativeSelect.defaultProps = {
-  IconComponent: ArrowDropDownIcon,
-  input: <Input />,
 };
 
 NativeSelect.muiName = 'Select';

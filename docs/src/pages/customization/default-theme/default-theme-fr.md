@@ -1,13 +1,21 @@
-# Default Theme
+# Thèmes par défaut
 
-<p class="description">Here's what the theme object looks like with the default values.</p>
+<p class="description">Voici à quoi ressemble l'objet de thème avec les valeurs par défaut.</p>
+
+## Explorer
+
+Voici la documentation de l’objet de thème:
 
 {{"demo": "pages/customization/default-theme/DefaultTheme.js", "hideEditButton": true}}
 
-The theme normalizes implementation by providing default values for palette, dark and light types, typography, breakpoints, shadows, transitions, etc.
+> Astuce: vous pouvez jouer avec la documentation de l’objet de thème dans **la console**. We expose a documentation `theme` variable on all the documentation pages. Veuillez noter que cette documentation utilise un thème personnalisé.
 
-Tip: you can play with the theme object in your console too. **We expose a global `theme` variable on all the pages**.
+If you want to learn more about how the theme is assembled, take a look at [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/styles/createMuiTheme.js), and the related imports which `createMuiTheme` uses.
 
-Please take note that the documentation site is using a custom theme. As a result, the demos you see here might disagree with the values above.
+## @material-ui/core/styles vs @material-ui/styles
 
-If you want to learn more about how the theme is assembled, take a look at [`material-ui/style/createMuiTheme.js`](https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/styles/createMuiTheme.js), and the related imports which `createMuiTheme` uses.
+Les styles de Material-UI proviennent du paquet npm [@material-ui/styles](/styles/basics/). C'est une solution de design pour React. Cette solution est [indépendante](https://bundlephobia.com/result?p=@material-ui/styles) , elle ne dépend pas du thème par défaut de Material-UI. To remove the need for injecting a theme in the React's context **systematically**, we are wrapping the style modules (`makeStyles`, `withStyles` and `styled`) with the default Material-UI theme:
+
+- `@material-ui/core/styles/makeStyles` encapsule `@material-ui/styles/makeStyles` .
+- `@material-ui/core/styles/withStyles` encapsule `@material-ui/styles/withStyles`.
+- `@material-ui/core/styles/styled` encapsule `@material-ui/styles/styled`.

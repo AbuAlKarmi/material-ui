@@ -1,14 +1,14 @@
-# Usage
+# Использование
 
 <p class="description">Начните работу с React и Material-UI в кратчайшие сроки.</p>
 
-Компоненты Material-UI работают изолированно. **They are self-supporting**, and will inject, and only inject, the styles they need to display. They don't rely on any global style-sheets such as [normalize.css](https://github.com/necolas/normalize.css/).
+Компоненты Material-UI работают изолированно. **Они самодостаточны** и внедрят только те стили, которые им нужны для отображения. Они не зависят от каких-либо глобальных стилей, таких как [ normalize.css ](https://github.com/necolas/normalize.css/).
 
-You can use any of the components as demonstrated in the documentation. Please refer to each component's [demo page](/demos/buttons/) to see how they should be imported.
+Вы можете использовать любой из компонентов, как показано в документации. Пожалуйста, обратитесь к [демо-странице](/components/buttons/) каждого компонента, чтобы увидеть, как они должны быть импортированы.
 
-## Quick start
+## Быстрый старт
 
-Here's a quick example to get you started, **it's literally all you need**:
+Вот краткий пример для начала, **это буквально все что вам нужно**:
 
 ```jsx
 import React from 'react';
@@ -26,36 +26,59 @@ function App() {
 ReactDOM.render(<App />, document.querySelector('#app'));
 ```
 
-Yes, this really is all you need to get started, as you can see in this live and interactive demo:
+Да, это действительно все, что вам нужно для начала, как вы можете увидеть в этой интерактивной демонстрации:
 
 {{"demo": "pages/getting-started/usage/Usage.js", "hideHeader": true}}
 
-## Globals
+## Глобальная настройка
 
-Material-UI usage experience can be improved with a handful of important globals that you’ll need to be aware of.
+Опыт использования Material-UI может быть улучшен с помощью ряда важных глобальных настроек, о которых вам нужно знать.
 
 ### Responsive meta tag
 
-Material-UI is developed mobile first, a strategy in which we first write code for mobile devices and then scale up components as necessary using CSS media queries. To ensure proper rendering and touch zooming for all devices, add the responsive viewport meta tag to your `<head>` element.
+Material-UI сначала разрабатывается для мобильных устройств - подход, при котором мы сначала пишем код для мобильных устройств, а затем масштабируем компоненты по мере необходимости, используя медиазапросы CSS. Чтобы обеспечить правильный рендеринг и масштабирование касанием для всех устройств, добавьте метатег реагирующего окна просмотра в элемент 
 
-```html
-<meta
+<head>
+  .</p> 
+  
+  <pre><code class="html">&lt;meta
   name="viewport"
-  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no">
-```
-
-### CssBaseline
-
-Material-UI provides an optional [CssBaseline](/style/css-baseline/) component. It's fixing some inconsistencies across browsers and devices while providing slightly more opinionated resets to common HTML elements.
-
-## Versioned Documentation
-
-This documentation always reflects the latest stable version of Material-UI. You can find older versions of the documentation on a [separate page](/versions/).
-
-## Next steps
-
-Now that you have an idea of the basic setup, it's time to learn more about:
-
-- How to provide [the Material Design font and typography](/style/typography/).
-- How to take advantage of the [theming solution](/customization/themes/).
-- How to [override](/customization/overrides/) the look and feel of the components.
+  content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+/&gt;
+</code></pre>
+  
+  <h3>
+    CssBaseline
+  </h3>
+  
+  <p>
+    Material-UI provides an optional <a href="/components/css-baseline/">CssBaseline</a> component. It fixes some inconsistencies across browsers and devices while providing slightly more opinionated resets to common HTML elements.
+  </p>
+  
+  <h2>
+    Versioned Documentation
+  </h2>
+  
+  <p>
+    This documentation always reflects the latest stable version of Material-UI. You can find older versions of the documentation on a <a href="/versions/">separate page</a>.
+  </p>
+  
+  <h2>
+    Next steps
+  </h2>
+  
+  <p>
+    Now that you have an idea of the basic setup, it's time to learn more about:
+  </p>
+  
+  <ul>
+    <li>
+      How to provide <a href="/components/typography/">the Material Design font and typography</a>.
+    </li>
+    <li>
+      How to take advantage of the <a href="/customization/themes/">theming solution</a>.
+    </li>
+    <li>
+      How to <a href="/customization/components/">override</a> the look and feel of the components.
+    </li>
+  </ul>

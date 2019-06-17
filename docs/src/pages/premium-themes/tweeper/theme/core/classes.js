@@ -1,5 +1,5 @@
-export const attach = (...classNames) => `&.${classNames.join('.')}`;
-export const nest = (...classNames) => `& .${classNames.join('.')}`;
+export const attach = (...clsx) => `&.${clsx.join('.')}`;
+export const nest = (...clsx) => `& .${clsx.join('.')}`;
 
 export const APP_BAR = {
   root: 'app-bar__root',
@@ -149,18 +149,7 @@ export const PAPER = {
   root: 'paper__root',
 };
 
-export const TABS = {
-  root: 'tabs__root',
-  inverted: 'tabs--inverted',
-  indicator: 'tabs__indicator',
-  underline: 'tabs--underline',
-};
-
 export const TAB = {
-  root: 'tab__root',
-  label: 'tab__label',
-  selected: 'tab--selected',
-  wrapper: 'tab__wrapper',
   onlyIcon: 'tab--only-icon',
 };
 
@@ -209,7 +198,6 @@ export default {
   ICON_BUTTON,
   INPUT_ADORNMENT,
   PAPER,
-  TABS,
   TAB,
   TOOLBAR,
   TEXT,

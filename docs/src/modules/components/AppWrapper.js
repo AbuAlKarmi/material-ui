@@ -1,77 +1,106 @@
-/* eslint-disable no-underscore-dangle */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import url from 'url';
-import { MuiThemeProvider } from '@material-ui/core/styles';
-import { StylesProvider } from '@material-ui/styles';
-import acceptLanguage from 'accept-language';
-import { lightTheme, darkTheme, setPrismTheme } from '@material-ui/docs/MarkdownElement/prism';
-import { updatePageContext } from 'docs/src/modules/styles/getPageContext';
+import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { Provider as ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { getCookie } from 'docs/src/modules/utils/helpers';
 import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
+import { create } from 'jss';
+import rtl from 'jss-rtl';
 
-// Inject the insertion-point-jss after docssearch
-if (process.browser && !global.__INSERTION_POINT__) {
-  global.__INSERTION_POINT__ = true;
-  const styleNode = document.createComment('insertion-point-jss');
-  const docsearchStylesSheet = document.querySelector('#insertion-point-jss');
+// Configure JSS
+const jss = create({
+  plugins: [...jssPreset().plugins, rtl()],
+  insertionPoint: process.browser ? document.querySelector('#insertion-point-jss') : null,
+});
 
-  if (document.head && docsearchStylesSheet) {
-    document.head.insertBefore(styleNode, docsearchStylesSheet.nextSibling);
-  }
+function useFirstRender() {
+  const firstRenderRef = React.useRef(true);
+  React.useEffect(() => {
+    firstRenderRef.current = false;
+  }, []);
+
+  return firstRenderRef.current;
 }
 
-function themeSideEffect(reduxTheme) {
-  setPrismTheme(reduxTheme.paletteType === 'light' ? lightTheme : darkTheme);
-  document.body.dir = reduxTheme.direction;
-}
+/**
+ * Priority: on first render: navigated value, persisted value; otherwise initial value, 'JS'
+ * @param {string} initialCodeVariant
+ * @param {(nextCodeVariant: string) => void} codeVariantChanged
+ * @returns {string} - The persisted variant if the initial value is undefined
+ */
+function usePersistCodeVariant(initialCodeVariant = CODE_VARIANTS.JS, codeVariantChanged) {
+  const isFirstRender = useFirstRender();
 
-acceptLanguage.languages(['en', 'zh']);
+  const navigatedCodeVariant = React.useMemo(() => {
+    const navigatedCodeVariantMatch =
+      typeof window !== 'undefined' ? window.location.hash.match(/\.(js|tsx)$/) : null;
 
-class SideEffectsRaw extends React.Component {
-  componentDidMount() {
-    const { options } = this.props;
-
-    const URL = url.parse(document.location.href, true);
-    const userLanguage = acceptLanguage.get(
-      URL.query.lang || getCookie('lang') || navigator.language,
-    );
-    const codeVariant = getCookie('codeVariant');
-
-    if (
-      (userLanguage && options.userLanguage !== userLanguage) ||
-      (codeVariant && options.codeVariant !== codeVariant)
-    ) {
-      window.ga('set', 'dimension1', codeVariant);
-      window.ga('set', 'dimension2', userLanguage);
-      this.props.dispatch({
-        type: ACTION_TYPES.OPTIONS_CHANGE,
-        payload: {
-          userLanguage,
-          codeVariant,
-        },
-      });
-    } else {
-      window.ga('set', 'dimension1', CODE_VARIANTS.JS);
-      window.ga('set', 'dimension2', 'en');
+    if (navigatedCodeVariantMatch === null) {
+      return undefined;
     }
-  }
 
-  render() {
-    return null;
-  }
+    return navigatedCodeVariantMatch[1] === 'tsx' ? CODE_VARIANTS.TS : CODE_VARIANTS.JS;
+  }, []);
+
+  const persistedCodeVariant = React.useMemo(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+    return getCookie('codeVariant');
+  }, []);
+
+  /**
+   * we initialize from navigation or cookies. on subsequent renders the store is the
+   * truth
+   */
+  const codeVariant =
+    isFirstRender === true
+      ? navigatedCodeVariant || persistedCodeVariant || initialCodeVariant
+      : initialCodeVariant;
+
+  React.useEffect(() => {
+    if (codeVariant !== initialCodeVariant) {
+      codeVariantChanged(codeVariant);
+    }
+  });
+
+  React.useEffect(() => {
+    document.cookie = `codeVariant=${codeVariant};path=/;max-age=31536000`;
+  }, [codeVariant]);
+
+  return codeVariant;
 }
 
-SideEffectsRaw.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  options: PropTypes.object.isRequired,
-};
+function Tracking(props) {
+  const { dispatch, options } = props;
 
-const SideEffects = connect(state => ({
+  const codeVariant = usePersistCodeVariant(options.codeVariant, nextCodeVariant =>
+    dispatch({ type: ACTION_TYPES.OPTIONS_CHANGE, payload: { codeVariant: nextCodeVariant } }),
+  );
+
+  React.useEffect(() => {
+    window.ga('set', 'dimension1', codeVariant);
+  }, [codeVariant]);
+
+  React.useEffect(() => {
+    window.ga('set', 'dimension2', options.userLanguage);
+  }, [options.userLanguage]);
+
+  React.useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentNode.removeChild(jssStyles);
+    }
+  }, []);
+
+  return null;
+}
+
+const ConnectedTracking = connect(state => ({
   options: state.options,
-}))(SideEffectsRaw);
+}))(Tracking);
 
 // Inspired by
 // https://developers.google.com/web/tools/workbox/guides/advanced-recipes#offer_a_page_reload_for_users
@@ -128,93 +157,23 @@ async function registerServiceWorker() {
   }
 }
 
-class AppWrapper extends React.Component {
-  state = {};
+function AppWrapper(props) {
+  const { children } = props;
 
-  componentDidMount() {
-    themeSideEffect(this.props.reduxTheme);
-
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side');
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles);
-    }
-
-    const { reduxTheme } = this.props;
-
-    const paletteType = getCookie('paletteType');
-    const paletteColors = getCookie('paletteColors');
-
-    if (
-      (paletteType && reduxTheme.paletteType !== paletteType) ||
-      (paletteColors && JSON.stringify(reduxTheme.paletteColors) !== paletteColors)
-    ) {
-      this.props.dispatch({
-        type: ACTION_TYPES.THEME_CHANGE,
-        payload: {
-          paletteType,
-          paletteColors: paletteColors ? JSON.parse(paletteColors) : null,
-        },
-      });
-    }
-
+  React.useEffect(() => {
     registerServiceWorker();
-  }
+  }, []);
 
-  componentDidUpdate() {
-    themeSideEffect(this.props.reduxTheme);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (typeof prevState.pageContext === 'undefined') {
-      return {
-        prevProps: nextProps,
-        pageContext: nextProps.pageContext,
-      };
-    }
-
-    const { prevProps } = prevState;
-
-    if (
-      nextProps.reduxTheme.paletteType !== prevProps.reduxTheme.paletteType ||
-      nextProps.reduxTheme.paletteColors !== prevProps.reduxTheme.paletteColors ||
-      nextProps.reduxTheme.direction !== prevProps.reduxTheme.direction
-    ) {
-      return {
-        prevProps: nextProps,
-        pageContext: updatePageContext(nextProps.reduxTheme),
-      };
-    }
-
-    return null;
-  }
-
-  render() {
-    const { children } = this.props;
-    const { pageContext } = this.state;
-
-    return (
-      <StylesProvider
-        generateClassName={pageContext.generateClassName}
-        jss={pageContext.jss}
-        sheetsManager={pageContext.sheetsManager}
-        sheetsRegistry={pageContext.sheetsRegistry}
-      >
-        <MuiThemeProvider theme={pageContext.theme}>{children}</MuiThemeProvider>
-        <SideEffects />
-      </StylesProvider>
-    );
-  }
+  return (
+    <StylesProvider jss={jss}>
+      <ThemeProvider>{children}</ThemeProvider>
+      <ConnectedTracking />
+    </StylesProvider>
+  );
 }
 
 AppWrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
-  pageContext: PropTypes.object,
-  reduxTheme: PropTypes.object.isRequired,
 };
 
-export default connect(state => ({
-  reduxTheme: state.theme,
-}))(AppWrapper);
+export default AppWrapper;
